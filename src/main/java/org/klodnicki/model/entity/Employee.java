@@ -1,5 +1,6 @@
 package org.klodnicki.model.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,14 @@ import org.klodnicki.model.Salary;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Employee extends Person {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
     private Department department;
+    @Embedded
     private Salary salary;
 
     public Employee (Long id, String firstName, String lastName, String email, Department department, Salary salary) {
