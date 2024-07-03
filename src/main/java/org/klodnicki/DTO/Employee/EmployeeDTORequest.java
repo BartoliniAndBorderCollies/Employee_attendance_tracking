@@ -1,4 +1,4 @@
-package org.klodnicki.DTO;
+package org.klodnicki.DTO.Employee;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
