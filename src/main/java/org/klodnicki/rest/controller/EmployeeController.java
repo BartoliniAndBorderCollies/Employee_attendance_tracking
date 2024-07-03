@@ -9,6 +9,8 @@ import org.klodnicki.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/employees")
 @AllArgsConstructor
@@ -25,6 +27,11 @@ public class EmployeeController {
     @GetMapping("/find/{id}")
     public EmployeeDTOResponse findById(@PathVariable Long id) throws NotFoundInDatabaseException {
         return employeeService.findById(id);
+    }
+
+    @GetMapping("/findAll")
+    public List<EmployeeDTOResponse> findAll() {
+        return employeeService.findAll();
     }
 
 

@@ -10,7 +10,9 @@ import org.klodnicki.service.generic.BasicCrudOperations;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -35,7 +37,15 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
     @Override
     public List<EmployeeDTOResponse> findAll() {
-        return null;
+        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
+        Iterable<Employee> employees = employeeRepository.findAll();
+
+        //use Stream and spliterator method in sequential mode(false) to map to DTO and add it straight to the list
+        StreamSupport.stream(employees.spliterator(), false)
+                .map(employee -> modelMapper.map(employee, EmployeeDTOResponse.class))
+                .forEach(employeeDTOResponseList::add);
+
+        return employeeDTOResponseList;
     }
 
     @Override
