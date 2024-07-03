@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -51,8 +52,18 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     @Override
-    public EmployeeDTOResponse update(Long id, EmployeeDTORequest employee) {
-        return null;
+    public EmployeeDTOResponse update(Long id, EmployeeDTORequest employeeDTORequest) throws NotFoundInDatabaseException {
+        Employee employeeToBeUpdated = employeeRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
+
+        Optional.ofNullable(employeeDTORequest.getFirstName()).ifPresent(employeeToBeUpdated::setFirstName);
+        Optional.ofNullable(employeeDTORequest.getLastName()).ifPresent(employeeToBeUpdated::setLastName);
+        Optional.ofNullable(employeeDTORequest.getEmail()).ifPresent(employeeToBeUpdated::setEmail);
+        Optional.ofNullable(employeeDTORequest.getDepartment()).ifPresent(employeeToBeUpdated::setDepartment);
+        Optional.ofNullable(employeeDTORequest.getSalary()).ifPresent(employeeToBeUpdated::setSalary);
+
+        employeeRepository.save(employeeToBeUpdated);
+
+        return modelMapper.map(employeeToBeUpdated, EmployeeDTOResponse.class);
     }
 
     @Override

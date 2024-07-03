@@ -35,10 +35,15 @@ public class EmployeeController {
         return employeeService.findAll();
     }
 
+    @PutMapping("/update/{id}")
+    public EmployeeDTOResponse update(@PathVariable Long id, @Valid @RequestBody EmployeeDTORequest employeeDTO)
+            throws NotFoundInDatabaseException {
+        return employeeService.update(id, employeeDTO);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseDTO deleteById(@PathVariable Long id) throws NotFoundInDatabaseException {
         return employeeService.delete(id);
     }
-
 
 }
