@@ -3,6 +3,7 @@ package org.klodnicki.service;
 import lombok.AllArgsConstructor;
 import org.klodnicki.DTO.EmployeeDTORequest;
 import org.klodnicki.DTO.EmployeeDTOResponse;
+import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
@@ -27,8 +28,9 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     @Override
-    public EmployeeDTOResponse findById(Long id) {
-        return null;
+    public EmployeeDTOResponse findById(Long id) throws NotFoundInDatabaseException {
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
+        return modelMapper.map(employee, EmployeeDTOResponse.class);
     }
 
     @Override
