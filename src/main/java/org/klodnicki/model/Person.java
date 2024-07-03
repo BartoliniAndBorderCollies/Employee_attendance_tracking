@@ -1,5 +1,6 @@
 package org.klodnicki.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public abstract class Person {
 
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
 
 }
