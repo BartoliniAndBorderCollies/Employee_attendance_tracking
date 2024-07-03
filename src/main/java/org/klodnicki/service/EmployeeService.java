@@ -1,13 +1,15 @@
 package org.klodnicki.service;
 
 import lombok.AllArgsConstructor;
-import org.klodnicki.DTO.EmployeeDTORequest;
-import org.klodnicki.DTO.EmployeeDTOResponse;
+import org.klodnicki.DTO.Employee.EmployeeDTORequest;
+import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.DTO.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,7 +56,15 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     @Override
-    public void delete(Long id) {
+    public ResponseDTO delete(Long id) throws NotFoundInDatabaseException {
+        Employee employeeToBeDeleted = employeeRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
+        employeeRepository.delete(employeeToBeDeleted);
 
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setMessage("Employee " + employeeToBeDeleted.getFirstName() + " " + employeeToBeDeleted.getLastName() +
+                " has been successfully deleted!");
+        responseDTO.setStatus(HttpStatus.OK);
+
+        return responseDTO;
     }
 }

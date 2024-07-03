@@ -2,8 +2,9 @@ package org.klodnicki.rest.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.klodnicki.DTO.EmployeeDTORequest;
-import org.klodnicki.DTO.EmployeeDTOResponse;
+import org.klodnicki.DTO.Employee.EmployeeDTORequest;
+import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.DTO.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.service.EmployeeService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,11 @@ public class EmployeeController {
     @GetMapping("/findAll")
     public List<EmployeeDTOResponse> findAll() {
         return employeeService.findAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseDTO deleteById(@PathVariable Long id) throws NotFoundInDatabaseException {
+        return employeeService.delete(id);
     }
 
 
