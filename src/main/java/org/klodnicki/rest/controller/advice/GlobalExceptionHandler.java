@@ -1,5 +1,6 @@
 package org.klodnicki.rest.controller.advice;
 
+import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,5 +20,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<?> handleDuplicatedEntry(SQLIntegrityConstraintViolationException e) {
         return new ResponseEntity<>("This entry already exist: " + e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(NotFoundInDatabaseException.class)
+    public ResponseEntity<?> handleNotFoundInDatabaseException(NotFoundInDatabaseException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
