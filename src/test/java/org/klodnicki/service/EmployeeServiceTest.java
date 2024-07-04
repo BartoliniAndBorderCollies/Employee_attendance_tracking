@@ -4,11 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.DTO.Employee.EmployeeDTORequest;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -57,6 +60,18 @@ class EmployeeServiceTest {
         verify(modelMapper).map(employeeDTORequest, Employee.class);
         verify(employeeRepository).save(employee);
         verify(modelMapper).map(employee, EmployeeDTOResponse.class);
+    }
+
+    @Test
+    public void findById_ShouldThrowNotFoundInDatabaseException_WhenEmployeeNotExist() {
+        //Arrange
+        Long nonExistentId = 999L;
+        // Mock repository to return empty Optional
+        when(employeeRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        //Act
+        //Assert
+        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.findById(nonExistentId));
     }
 
 }
