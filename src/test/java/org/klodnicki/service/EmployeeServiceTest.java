@@ -96,6 +96,26 @@ class EmployeeServiceTest {
         verify(modelMapper).map(employee, EmployeeDTOResponse.class);
     }
 
+    @Test
+    public void findAll_ShouldReturnListEmployeeDTO_WhenExist() {
+        //Arrange
+        List<Employee> employeeList = Arrays.asList(employee);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findAll()).thenReturn(employeeList);
+        when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findAll();
+
+        //Assert
+        assertNotNull(actualResponse);
+        assertThat(actualResponse).isEqualTo(expected);
+
+        //Verify mocks
+        verify(employeeRepository).findAll();
+        verify(modelMapper).map(employee, EmployeeDTOResponse.class);
+    }
 
 
 }
