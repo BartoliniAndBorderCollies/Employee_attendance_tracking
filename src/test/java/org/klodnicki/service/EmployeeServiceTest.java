@@ -74,4 +74,28 @@ class EmployeeServiceTest {
         assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.findById(nonExistentId));
     }
 
+    @Test
+    public void findById_ShouldReturnEmployeeDTOResponse_WhenEmployeeExists() throws NotFoundInDatabaseException {
+        // Arrange
+        Long existingId = 1L;
+        Employee employee = new Employee();
+        EmployeeDTOResponse expectedResponse = new EmployeeDTOResponse();
+
+        when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
+        when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(expectedResponse);
+
+        // Act
+        EmployeeDTOResponse actualResponse = employeeService.findById(existingId);
+
+        // Assert
+        assertNotNull(actualResponse);
+        assertEquals(expectedResponse, actualResponse);
+
+        // Verify interactions with mocks
+        verify(employeeRepository).findById(existingId);
+        verify(modelMapper).map(employee, EmployeeDTOResponse.class);
+    }
+
+
+
 }
