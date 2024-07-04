@@ -1,6 +1,7 @@
 package org.klodnicki.rest.controller;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.DTO.Employee.EmployeeDTORequest;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
@@ -27,11 +28,20 @@ class EmployeeControllerIntegrationTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    private Employee savedEmployee;
+
+    @BeforeEach
+    void setUp() {
+        // Save an employee to the database before each test
+        savedEmployee = new Employee("firstName", "LastName", "test@test.pl",
+                Department.DEPARTMENT3, new Salary(1000.00));
+        savedEmployee = employeeRepository.save(savedEmployee);
+    }
+
     @AfterEach
     public void cleanDatabase() {
         employeeRepository.deleteAll();
     }
-
 
     @Test
     public void create_ShouldAddEmployeeToDatabaseAndReturnEmployeeDTOResponse_WhenEmployeeDTORequestIsGiven() {
@@ -65,6 +75,27 @@ class EmployeeControllerIntegrationTest {
                     }, () -> {
                         throw new RuntimeException(new NotFoundInDatabaseException(Employee.class));
                     });
+                });
+    }
+
+    @Test
+    public void findById_ShouldFindAndReturnEmployeeDTO_WhenEmployeeIdIsGiven() {
+
+        webTestClient.get()
+                .uri("/api/v1/employees/find/" + savedEmployee.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(EmployeeDTOResponse.class)
+                .consumeWith(response -> {
+                    EmployeeDTOResponse actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse);
+
+                    assertEquals(savedEmployee.getId(), actualResponse.getId());
+                    assertEquals(savedEmployee.getFirstName(), actualResponse.getFirstName());
+                    assertEquals(savedEmployee.getLastName(), actualResponse.getLastName());
+                    assertEquals(savedEmployee.getEmail(), actualResponse.getEmail());
+                    assertEquals(savedEmployee.getDepartment(), actualResponse.getDepartment());
+                    assertEquals(savedEmployee.getSalary(), actualResponse.getSalary());
                 });
     }
 
