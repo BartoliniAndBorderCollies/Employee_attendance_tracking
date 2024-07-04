@@ -127,4 +127,38 @@ class EmployeeControllerIntegrationTest {
                 });
     }
 
+    @Test
+    public void update_ShouldUpdateEmployeeOnDatabase_WhenEmployeeDTORequestAndIdAreGiven() {
+        Employee employeeToBeUpdated = new Employee("firstName", "LastName", "update@update.pl",
+                Department.DEPARTMENT3, new Salary(1000.00));
+        employeeRepository.save(employeeToBeUpdated);
+
+        EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("updatedFirstName", "updatedLastName",
+                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00));
+
+        webTestClient.put()
+                .uri("/api/v1/employees/update/" + employeeToBeUpdated.getId())
+                .bodyValue(employeeDTORequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(EmployeeDTOResponse.class)
+                .consumeWith(response -> {
+                    EmployeeDTOResponse actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse);
+
+                    Optional<Employee> optionalEmployee = employeeRepository.findById(employeeToBeUpdated.getId());
+                    optionalEmployee.ifPresentOrElse(employee ->
+                    {
+                        assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
+                        assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
+                        assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
+                        assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
+                        assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+
+                    }, () -> {
+                        throw new RuntimeException("Employee not found in database");
+                    });
+                });
+    }
+
 }
