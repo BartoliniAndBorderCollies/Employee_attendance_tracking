@@ -11,8 +11,11 @@ import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -71,7 +74,7 @@ class EmployeeServiceTest {
 
         //Act
         //Assert
-        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.findById(nonExistentId));
+        assertThrows(NotFoundInDatabaseException.class, () -> employeeService.findById(nonExistentId));
     }
 
     @Test
@@ -79,17 +82,16 @@ class EmployeeServiceTest {
         // Arrange
         Long existingId = 1L;
         Employee employee = new Employee();
-        EmployeeDTOResponse expectedResponse = new EmployeeDTOResponse();
 
         when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
-        when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(expectedResponse);
+        when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
 
         // Act
         EmployeeDTOResponse actualResponse = employeeService.findById(existingId);
 
         // Assert
         assertNotNull(actualResponse);
-        assertEquals(expectedResponse, actualResponse);
+        assertEquals(employeeDTOResponse, actualResponse);
 
         // Verify interactions with mocks
         verify(employeeRepository).findById(existingId);
