@@ -10,13 +10,17 @@ import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -27,7 +31,8 @@ class EmployeeControllerIntegrationTest {
     private WebTestClient webTestClient;
     @Autowired
     private EmployeeRepository employeeRepository;
-
+    @Autowired
+    private ModelMapper modelMapper;
     private Employee savedEmployee;
 
     @BeforeEach
@@ -96,6 +101,29 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(savedEmployee.getEmail(), actualResponse.getEmail());
                     assertEquals(savedEmployee.getDepartment(), actualResponse.getDepartment());
                     assertEquals(savedEmployee.getSalary(), actualResponse.getSalary());
+                });
+    }
+
+    @Test
+    public void findAll_ShouldFindAndReturnListEmployeeDTOResponse_WhenExist() {
+        //declare, initialize the list with savedEmployee converted straight to EmployeeDTOResponse
+        List<EmployeeDTOResponse> expectedList = Arrays.asList(modelMapper.map(savedEmployee, EmployeeDTOResponse.class));
+
+        webTestClient.get()
+                .uri("/api/v1/employees/findAll")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(EmployeeDTOResponse.class)
+                .consumeWith(response -> {
+                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse, "Response body should not be null");
+                    assertFalse(actualResponse.isEmpty(), "Response body should not be empty");
+
+                    // Assert that actualResponse contains exactly the same elements as expectedList
+                    assertThat(actualResponse)
+                            .usingRecursiveComparison()
+                            .ignoringFields("id") // Ignore ID field for comparison
+                            .isEqualTo(expectedList);
                 });
     }
 
