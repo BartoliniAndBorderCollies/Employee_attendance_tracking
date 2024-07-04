@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.DTO.Employee.EmployeeDTORequest;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.DTO.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
@@ -13,6 +14,7 @@ import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -158,6 +160,28 @@ class EmployeeControllerIntegrationTest {
                     }, () -> {
                         throw new RuntimeException("Employee not found in database");
                     });
+                });
+    }
+
+    @Test
+    public void deleteById_ShouldDeleteEmployee_WhenIdIsGiven() {
+
+        webTestClient.delete()
+                .uri("/api/v1/employees/delete/" + savedEmployee.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ResponseDTO.class)
+                .consumeWith(response -> {
+                    ResponseDTO actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse, "Response body should not be null");
+
+                    //check if it was deleted and does not exist in db anymore
+                    Optional<Employee> shouldBeEmpty = employeeRepository.findById(savedEmployee.getId());
+                    assertTrue(shouldBeEmpty.isEmpty());
+
+                    assertEquals(actualResponse.getMessage(), "Employee " + savedEmployee.getFirstName() + " " +
+                            savedEmployee.getLastName() + " has been successfully deleted!");
+                    assertEquals(actualResponse.getStatus(), HttpStatus.OK);
                 });
     }
 
