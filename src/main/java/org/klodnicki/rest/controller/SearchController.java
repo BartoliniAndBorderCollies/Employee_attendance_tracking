@@ -18,17 +18,17 @@ public class SearchController {
 
     private final EmployeeService employeeService;
 
-    @GetMapping("/name")
+    @GetMapping("employee/name")
     public List<EmployeeDTOResponse> findByName (@RequestParam("lastName") String lastName) {
         return employeeService.findByName(lastName);
     }
 
-    @GetMapping("/salary")
+    @GetMapping("employee/salary")
     public List<EmployeeDTOResponse> findBySalaryRange(@RequestParam("from") double from, @RequestParam("to") double to) {
         return employeeService.findBySalaryRange(from, to);
     }
 
-    @GetMapping("/department")
+    @GetMapping("employee/department")
     public List<EmployeeDTOResponse> findByDepartment (@RequestParam("department")Department department) {
         return employeeService.findByDepartment(department);
     }
