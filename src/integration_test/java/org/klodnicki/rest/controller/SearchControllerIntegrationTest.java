@@ -81,7 +81,29 @@ class SearchControllerIntegrationTest {
                     assertNotNull(actualResponse, "Actual response should not be null");
                     assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
                 });
+    }
 
+    @Test
+    public void findByDepartment_ShouldReturnListEmployeeDTOWithAppropriateDepartment_WhenDepartmentIsGiven() {
+        String departmentName = Department.DEPARTMENT1.name();
+        List<EmployeeDTOResponse> expected = new ArrayList<>();
+        List<Employee> department1Employees = Arrays.asList(employee1, employee2);
+
+        department1Employees.forEach(employee -> {
+            EmployeeDTOResponse employeeDTOresponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            expected.add(employeeDTOresponse);
+        });
+
+        webTestClient.get()
+                .uri("/api/v1/search/employee/department?department=" + departmentName)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(EmployeeDTOResponse.class)
+                .consumeWith(response -> {
+                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse, "Actual response should not be null");
+                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
+                });
     }
 
 }
