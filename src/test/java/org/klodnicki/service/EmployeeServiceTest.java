@@ -131,5 +131,27 @@ class EmployeeServiceTest {
         assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.update(nonExistentId, employeeDTORequest));
     }
 
+    @Test
+    public void update_ShouldGetValuesIfPresentAndSetAndMapAndSave_WhenIdAndEmployeeDTORequestAreGiven() throws NotFoundInDatabaseException {
+        //Arrange
+        Long existingId = 1L;
+
+        when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
+        when(employeeRepository.save(employee)).thenReturn(employee);
+        when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        EmployeeDTOResponse actualResponse = employeeService.update(existingId, employeeDTORequest);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(employeeDTOResponse, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findById(existingId);
+        verify(employeeRepository).save(employee);
+        verify(modelMapper).map(employee, EmployeeDTOResponse.class);
+    }
+
 
 }
