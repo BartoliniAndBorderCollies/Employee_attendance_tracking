@@ -36,17 +36,19 @@ class EmployeeServiceTest {
     private Employee employee;
     @Mock
     private EmployeeDTOResponse employeeDTOResponse;
-
-    private final Long nonExistentId = 999L;
+    private Long existingId;
+    private Long nonExistentId;
 
     public EmployeeServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
 
     @BeforeEach
-    public void prepareInstances() {
+    public void setUp() {
         employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
                 new Salary(100.00));
+        existingId = 1L;
+        nonExistentId = 999L;
     }
 
     @Test
@@ -83,7 +85,6 @@ class EmployeeServiceTest {
     @Test
     public void findById_ShouldReturnEmployeeDTOResponse_WhenEmployeeExists() throws NotFoundInDatabaseException {
         // Arrange
-        Long existingId = 1L;
         Employee employee = new Employee();
 
         when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
@@ -133,8 +134,6 @@ class EmployeeServiceTest {
     @Test
     public void update_ShouldGetValuesIfPresentAndSetAndMapAndSave_WhenIdAndEmployeeDTORequestAreGiven() throws NotFoundInDatabaseException {
         //Arrange
-        Long existingId = 1L;
-
         when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
         when(employeeRepository.save(employee)).thenReturn(employee);
         when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
