@@ -1,5 +1,6 @@
 package org.klodnicki.rest.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
@@ -52,6 +53,11 @@ class SearchControllerIntegrationTest {
         for (Employee employee : employees) {
             employeeRepository.save(employee);
         }
+    }
+
+    @AfterEach
+    public void cleanDatabase() {
+        employeeRepository.deleteAll();
     }
 
     @Test
