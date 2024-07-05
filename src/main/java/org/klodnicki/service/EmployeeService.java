@@ -39,6 +39,11 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         return modelMapper.map(employee, EmployeeDTOResponse.class);
     }
 
+    /**
+     * Retrieves all employees and maps them to a list of EmployeeDTOResponse objects.
+     *
+     * @return A list of EmployeeDTOResponse objects representing all employees.
+     */
     @Override
     public List<EmployeeDTOResponse> findAll() {
         List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
@@ -52,6 +57,14 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         return employeeDTOResponseList;
     }
 
+    /**
+     * Updates an existing employee's information.
+     *
+     * @param id The ID of the employee to update.
+     * @param employeeDTORequest The DTO containing the updated employee details.
+     * @return The updated EmployeeDTOResponse object.
+     * @throws NotFoundInDatabaseException if the employee with the given ID is not found.
+     */
     @Override
     public EmployeeDTOResponse update(Long id, EmployeeDTORequest employeeDTORequest) throws NotFoundInDatabaseException {
         Employee employeeToBeUpdated = employeeRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
@@ -92,6 +105,12 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         return mapEmployeeListToDTOs(employeeRepository.findByDepartment(department));
     }
 
+    /**
+     * Maps a list of Employee entities to a list of EmployeeDTOResponse objects.
+     *
+     * @param employees The list of Employee entities to be mapped.
+     * @return A list of EmployeeDTOResponse objects.
+     */
     private List<EmployeeDTOResponse> mapEmployeeListToDTOs(List<Employee> employees) {
         List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
 
