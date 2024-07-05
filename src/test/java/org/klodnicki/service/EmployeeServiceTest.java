@@ -152,5 +152,13 @@ class EmployeeServiceTest {
         verify(modelMapper).map(employee, EmployeeDTOResponse.class);
     }
 
+    @Test
+    public void delete_ShouldThrowNotFoundInDatabaseException_WhenEmployeeNotExist() {
+        //Arrange
+        //Act
+        //Assert
+        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.delete(nonExistentId));
+    }
+
 
 }
