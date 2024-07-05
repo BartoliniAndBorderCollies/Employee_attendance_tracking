@@ -2,6 +2,7 @@ package org.klodnicki.rest.controller;
 
 import lombok.AllArgsConstructor;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.model.Department;
 import org.klodnicki.service.EmployeeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,11 @@ public class SearchController {
     @GetMapping("/salary")
     public List<EmployeeDTOResponse> findBySalaryRange(@RequestParam("from") double from, @RequestParam("to") double to) {
         return employeeService.findBySalaryRange(from, to);
+    }
+
+    @GetMapping("/department")
+    public List<EmployeeDTOResponse> findByDepartment (@RequestParam("department")Department department) {
+        return employeeService.findByDepartment(department);
     }
 
 }

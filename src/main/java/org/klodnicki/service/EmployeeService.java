@@ -5,6 +5,7 @@ import org.klodnicki.DTO.Employee.EmployeeDTORequest;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
 import org.klodnicki.DTO.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
+import org.klodnicki.model.Department;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
@@ -99,5 +100,16 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         });
 
         return employeeDTOResponseList;
+    }
+
+    public List<EmployeeDTOResponse> findByDepartment(Department department) {
+        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
+
+        employeeRepository.findByDepartment(department).forEach(employee -> {
+            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            employeeDTOResponseList.add(employeeDTOResponse);
+        });
+
+        return  employeeDTOResponseList;
     }
 }
