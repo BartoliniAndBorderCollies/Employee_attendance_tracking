@@ -80,6 +80,34 @@ class SearchControllerIntegrationTest {
     }
 
     @Test
+    public void findBySalaryRange_ShouldReturnListEmployeeDTOWithSalaryRange_WhenRangeIsGiven() {
+        double minSalary = 5000;
+        double maxSalary = 12000;
+        List<EmployeeDTOResponse> expected = new ArrayList<>();
+        List<Employee> employeeInRange = Arrays.asList(employee1, employee2);
+
+        employeeInRange.forEach(employee -> {
+            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            expected.add(employeeDTOResponse);
+        });
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/search/employee/salary")
+                        .queryParam("from", minSalary)
+                        .queryParam("to", maxSalary)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(EmployeeDTOResponse.class)
+                .consumeWith(response -> {
+                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse, "Actual response should not be null");
+                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
+                });
+    }
+
+    @Test
     public void findByDepartment_ShouldReturnListEmployeeDTOWithAppropriateDepartment_WhenDepartmentIsGiven() {
         String departmentName = Department.DEPARTMENT1.name();
         List<EmployeeDTOResponse> expected = new ArrayList<>();
