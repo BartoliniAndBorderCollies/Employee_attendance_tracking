@@ -78,4 +78,15 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
         return responseDTO;
     }
+
+    public List<EmployeeDTOResponse> findByName(String lastName) {
+        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
+
+        employeeRepository.findByLastName(lastName).forEach(employee -> {
+            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            employeeDTOResponseList.add(employeeDTOResponse);
+        });
+
+        return employeeDTOResponseList;
+    }
 }
