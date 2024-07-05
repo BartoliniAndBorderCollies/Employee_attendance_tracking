@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.DTO.Employee.EmployeeDTORequest;
 import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.DTO.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -157,6 +159,29 @@ class EmployeeServiceTest {
         //Act
         //Assert
         assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.delete(nonExistentId));
+    }
+
+    @Test
+    public void delete_ShouldFindDeleteAndReturnResponseDTO_WhenEmployeeIdIsGiven() throws NotFoundInDatabaseException {
+        //Arrange
+        employee.setFirstName("John");
+        employee.setLastName("Deere");
+
+        ResponseDTO expected = new ResponseDTO("Employee " + employee.getFirstName() + " " + employee.getLastName() +
+                " has been successfully deleted!", HttpStatus.OK);
+
+        when(employeeRepository.findById(existingId)).thenReturn(Optional.ofNullable(employee));
+
+        //Act
+        ResponseDTO actualResponse = employeeService.delete(existingId);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findById(existingId);
+        verify(employeeRepository).delete(employee);
     }
 
 
