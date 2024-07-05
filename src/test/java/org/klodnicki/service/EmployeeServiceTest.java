@@ -130,7 +130,7 @@ class EmployeeServiceTest {
         //Arrange
         //Act
         //Assert
-        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.update(nonExistentId, employeeDTORequest));
+        assertThrows(NotFoundInDatabaseException.class, () -> employeeService.update(nonExistentId, employeeDTORequest));
     }
 
     @Test
@@ -158,7 +158,7 @@ class EmployeeServiceTest {
         //Arrange
         //Act
         //Assert
-        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.delete(nonExistentId));
+        assertThrows(NotFoundInDatabaseException.class, () -> employeeService.delete(nonExistentId));
     }
 
     @Test
@@ -184,5 +184,76 @@ class EmployeeServiceTest {
         verify(employeeRepository).delete(employee);
     }
 
+    @Test
+    public void findByName_ShouldFindAndMapAndReturnEmployeeDTOList_WhenLastNameIsGiven() {
+        //Arrange
+        Employee employee1 = new Employee();
+        List<Employee> employeeList = Arrays.asList(employee1);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findByLastName(employee1.getLastName())).thenReturn(employeeList);
+        when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findByName(employee1.getLastName());
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findByLastName(employee1.getLastName());
+        verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
+    }
+
+    @Test
+    public void findBySalaryRange_ShouldFindAndMapAndReturnEmployeeDTOList_WhenSalaryRangeIsGiven() {
+        //Arrange
+        double minSalary = 1000;
+        double maxSalary = 5000;
+
+        Employee employee1 = new Employee();
+        List<Employee> employeeList = Arrays.asList(employee1);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findBySalaryRange(minSalary, maxSalary)).thenReturn(employeeList);
+        when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findBySalaryRange(minSalary, maxSalary);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findBySalaryRange(minSalary, maxSalary);
+        verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
+
+    }
+
+    @Test
+    public void findByDepartment_ShouldFindAndMapAndReturnEmployeeDTOList_WhenDepartmentIsGiven() {
+        //Arrange
+        Department department = Department.DEPARTMENT1;
+
+        Employee employee1 = new Employee();
+        List<Employee> employeeList = Arrays.asList(employee1);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findByDepartment(department)).thenReturn(employeeList);
+        when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findByDepartment(department);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findByDepartment(department);
+        verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
+    }
 
 }
