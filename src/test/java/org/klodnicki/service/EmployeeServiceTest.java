@@ -37,6 +37,8 @@ class EmployeeServiceTest {
     @Mock
     private EmployeeDTOResponse employeeDTOResponse;
 
+    private final Long nonExistentId = 999L;
+
     public EmployeeServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
@@ -70,7 +72,6 @@ class EmployeeServiceTest {
     @Test
     public void findById_ShouldThrowNotFoundInDatabaseException_WhenEmployeeNotExist() {
         //Arrange
-        Long nonExistentId = 999L;
         // Mock repository to return empty Optional
         when(employeeRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
@@ -124,8 +125,6 @@ class EmployeeServiceTest {
     @Test
     public void update_ShouldThrowNotFoundInDatabaseException_WhenGivenIdNotExist() {
         //Arrange
-        Long nonExistentId = 999L;
-
         //Act
         //Assert
         assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.update(nonExistentId, employeeDTORequest));
