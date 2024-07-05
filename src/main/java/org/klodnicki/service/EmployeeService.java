@@ -89,4 +89,15 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
         return employeeDTOResponseList;
     }
+
+    public List<EmployeeDTOResponse> findBySalaryRange(double from, double to) {
+        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
+
+        employeeRepository.findBySalaryRange(from, to).forEach(employee -> {
+            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            employeeDTOResponseList.add(employeeDTOResponse);
+        });
+
+        return employeeDTOResponseList;
+    }
 }

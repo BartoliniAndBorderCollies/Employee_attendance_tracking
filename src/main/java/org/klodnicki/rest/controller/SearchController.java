@@ -22,5 +22,9 @@ public class SearchController {
         return employeeService.findByName(lastName);
     }
 
+    @GetMapping("/salary")
+    public List<EmployeeDTOResponse> findBySalaryRange(@RequestParam("from") double from, @RequestParam("to") double to) {
+        return employeeService.findBySalaryRange(from, to);
+    }
 
 }
