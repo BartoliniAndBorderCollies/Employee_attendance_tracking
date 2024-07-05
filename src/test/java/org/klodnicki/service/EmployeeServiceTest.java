@@ -9,6 +9,9 @@ import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.Arrays;
@@ -17,32 +20,31 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 
 class EmployeeServiceTest {
 
+    @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
     private ModelMapper modelMapper;
+    @InjectMocks
     private EmployeeService employeeService;
     private EmployeeDTORequest employeeDTORequest;
+    @Mock
     private Employee employee;
+    @Mock
     private EmployeeDTOResponse employeeDTOResponse;
 
-    @BeforeEach
-    public void prepareEnvironment() {
-        employeeRepository = mock(EmployeeRepository.class);
-        modelMapper = mock(ModelMapper.class);
-        employeeService = new EmployeeService(employeeRepository, modelMapper);
+    public EmployeeServiceTest() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @BeforeEach
     public void prepareInstances() {
         employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
                 new Salary(100.00));
-        employee = mock(Employee.class);
-        employeeDTOResponse = mock(EmployeeDTOResponse.class);
     }
 
     @Test
