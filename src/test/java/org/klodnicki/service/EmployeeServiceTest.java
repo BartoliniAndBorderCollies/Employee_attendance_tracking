@@ -119,5 +119,15 @@ class EmployeeServiceTest {
         verify(modelMapper).map(employee, EmployeeDTOResponse.class);
     }
 
+    @Test
+    public void update_ShouldThrowNotFoundInDatabaseException_WhenGivenIdNotExist() {
+        //Arrange
+        Long nonExistentId = 999L;
+
+        //Act
+        //Assert
+        assertThrows(NotFoundInDatabaseException.class, ()-> employeeService.update(nonExistentId, employeeDTORequest));
+    }
+
 
 }
