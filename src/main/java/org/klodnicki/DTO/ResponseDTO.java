@@ -1,13 +1,13 @@
 package org.klodnicki.DTO;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Data
+@AllArgsConstructor
 public class ResponseDTO {
 
     private String message;
