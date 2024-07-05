@@ -81,20 +81,21 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     public List<EmployeeDTOResponse> findByName(String lastName) {
-        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
-
-        employeeRepository.findByLastName(lastName).forEach(employee -> {
-            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
-            employeeDTOResponseList.add(employeeDTOResponse);
-        });
-
-        return employeeDTOResponseList;
+        return mapEmployeeListToDTOs(employeeRepository.findByLastName(lastName));
     }
 
     public List<EmployeeDTOResponse> findBySalaryRange(double from, double to) {
+        return mapEmployeeListToDTOs(employeeRepository.findBySalaryRange(from, to));
+    }
+
+    public List<EmployeeDTOResponse> findByDepartment(Department department) {
+        return mapEmployeeListToDTOs(employeeRepository.findByDepartment(department));
+    }
+
+    private List<EmployeeDTOResponse> mapEmployeeListToDTOs(List<Employee> employees) {
         List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
 
-        employeeRepository.findBySalaryRange(from, to).forEach(employee -> {
+        employees.forEach(employee -> {
             EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
             employeeDTOResponseList.add(employeeDTOResponse);
         });
@@ -102,14 +103,4 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         return employeeDTOResponseList;
     }
 
-    public List<EmployeeDTOResponse> findByDepartment(Department department) {
-        List<EmployeeDTOResponse> employeeDTOResponseList = new ArrayList<>();
-
-        employeeRepository.findByDepartment(department).forEach(employee -> {
-            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
-            employeeDTOResponseList.add(employeeDTOResponse);
-        });
-
-        return  employeeDTOResponseList;
-    }
 }
