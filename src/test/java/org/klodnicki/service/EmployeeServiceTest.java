@@ -206,5 +206,29 @@ class EmployeeServiceTest {
         verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
     }
 
+    @Test
+    public void findByDepartment_ShouldFindAndMapAndReturnEmployeeDTOList_WhenDepartmentIsGiven() {
+        //Arrange
+        Department department = Department.DEPARTMENT1;
+
+        Employee employee1 = new Employee();
+        List<Employee> employeeList = Arrays.asList(employee1);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findByDepartment(department)).thenReturn(employeeList);
+        when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findByDepartment(department);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findByDepartment(department);
+        verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
+    }
+
 
 }
