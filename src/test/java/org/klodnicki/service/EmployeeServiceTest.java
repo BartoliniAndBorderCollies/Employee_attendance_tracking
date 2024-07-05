@@ -207,6 +207,32 @@ class EmployeeServiceTest {
     }
 
     @Test
+    public void findBySalaryRange_ShouldFindAndMapAndReturnEmployeeDTOList_WhenSalaryRangeIsGiven() {
+        //Arrange
+        double minSalary = 1000;
+        double maxSalary = 5000;
+
+        Employee employee1 = new Employee();
+        List<Employee> employeeList = Arrays.asList(employee1);
+        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+
+        when(employeeRepository.findBySalaryRange(minSalary, maxSalary)).thenReturn(employeeList);
+        when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
+
+        //Act
+        List<EmployeeDTOResponse> actualResponse = employeeService.findBySalaryRange(minSalary, maxSalary);
+
+        //Assert
+        assertNotNull(actualResponse, "Actual response should not be null");
+        assertEquals(expected, actualResponse);
+
+        //Verify
+        verify(employeeRepository).findBySalaryRange(minSalary, maxSalary);
+        verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
+
+    }
+
+    @Test
     public void findByDepartment_ShouldFindAndMapAndReturnEmployeeDTOList_WhenDepartmentIsGiven() {
         //Arrange
         Department department = Department.DEPARTMENT1;
@@ -229,6 +255,5 @@ class EmployeeServiceTest {
         verify(employeeRepository).findByDepartment(department);
         verify(modelMapper).map(employee1, EmployeeDTOResponse.class);
     }
-
 
 }
