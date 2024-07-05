@@ -48,11 +48,7 @@ class SearchControllerIntegrationTest {
         employee4 = new Employee("firstName4", "Klodnicki", "email4@email.com", Department.DEPARTMENT3,
                 new Salary(22000));
 
-        Employee[] employees = {employee1, employee2, employee3, employee4};
-
-        for (Employee employee : employees) {
-            employeeRepository.save(employee);
-        }
+        employeeRepository.saveAll(Arrays.asList(employee1, employee2, employee3, employee4));
     }
 
     @AfterEach
