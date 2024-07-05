@@ -15,6 +15,12 @@ import org.klodnicki.model.Salary;
 @AllArgsConstructor
 @Entity
 public class Employee extends Person {
+
+    public Employee (String firstName, String lastName, String email, Department department, Salary salary) {
+        super(firstName, lastName, email);
+        this.department = department;
+        this.salary = salary;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,12 +28,5 @@ public class Employee extends Person {
     private Department department;
     @Embedded
     private Salary salary;
-
-    public Employee (Long id, String firstName, String lastName, String email, Department department, Salary salary) {
-        super(id, firstName, lastName, email);
-        this.department = department;
-        this.salary = salary;
-    }
-
 
 }
