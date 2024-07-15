@@ -13,6 +13,7 @@ import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "/application-test.properties")
+@AutoConfigureWebTestClient
 class EmployeeControllerIntegrationTest {
 
     @Autowired
