@@ -38,8 +38,8 @@ class EmployeeServiceTest {
     private Employee employee;
     @Mock
     private EmployeeDTOResponse employeeDTOResponse;
-    private Long existingId;
-    private Long nonExistentId;
+    private final Long existingId = 1L;
+    private final Long nonExistentId = 999L;
 
     public EmployeeServiceTest() {
         MockitoAnnotations.openMocks(this);
