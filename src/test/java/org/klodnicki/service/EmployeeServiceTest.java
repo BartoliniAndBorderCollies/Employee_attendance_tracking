@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +48,6 @@ class EmployeeServiceTest {
     public void setUp() {
         employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
                 new Salary(100.00));
-        existingId = 1L;
-        nonExistentId = 999L;
     }
 
     @Test
@@ -107,8 +104,8 @@ class EmployeeServiceTest {
     @Test
     public void findAll_ShouldReturnListEmployeeDTO_WhenExist() {
         //Arrange
-        List<Employee> employeeList = Arrays.asList(employee);
-        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+        List<Employee> employeeList = List.of(employee);
+        List<EmployeeDTOResponse> expected = List.of(employeeDTOResponse);
 
         when(employeeRepository.findAll()).thenReturn(employeeList);
         when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
@@ -188,8 +185,8 @@ class EmployeeServiceTest {
     public void findByName_ShouldFindAndMapAndReturnEmployeeDTOList_WhenLastNameIsGiven() {
         //Arrange
         Employee employee1 = new Employee();
-        List<Employee> employeeList = Arrays.asList(employee1);
-        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+        List<Employee> employeeList = List.of(employee1);
+        List<EmployeeDTOResponse> expected = List.of(employeeDTOResponse);
 
         when(employeeRepository.findByLastName(employee1.getLastName())).thenReturn(employeeList);
         when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
@@ -213,8 +210,8 @@ class EmployeeServiceTest {
         double maxSalary = 5000;
 
         Employee employee1 = new Employee();
-        List<Employee> employeeList = Arrays.asList(employee1);
-        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+        List<Employee> employeeList = List.of(employee1);
+        List<EmployeeDTOResponse> expected = List.of(employeeDTOResponse);
 
         when(employeeRepository.findBySalaryRange(minSalary, maxSalary)).thenReturn(employeeList);
         when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
@@ -238,8 +235,8 @@ class EmployeeServiceTest {
         Department department = Department.DEPARTMENT1;
 
         Employee employee1 = new Employee();
-        List<Employee> employeeList = Arrays.asList(employee1);
-        List<EmployeeDTOResponse> expected = Arrays.asList(employeeDTOResponse);
+        List<Employee> employeeList = List.of(employee1);
+        List<EmployeeDTOResponse> expected = List.of(employeeDTOResponse);
 
         when(employeeRepository.findByDepartment(department)).thenReturn(employeeList);
         when(modelMapper.map(employee1, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
