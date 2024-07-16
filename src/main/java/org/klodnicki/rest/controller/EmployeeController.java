@@ -19,31 +19,31 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeDTOResponse create(@RequestBody @Valid EmployeeDTORequest employeeDTO) {
         return employeeService.create(employeeDTO);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     public EmployeeDTOResponse findById(@PathVariable Long id) throws NotFoundInDatabaseException {
         return employeeService.findById(id);
     }
 
-    @GetMapping("/findAll")
+    @GetMapping
     public List<EmployeeDTOResponse> findAll() {
         return employeeService.findAll();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public EmployeeDTOResponse update(@PathVariable Long id, @Valid @RequestBody EmployeeDTORequest employeeDTO)
             throws NotFoundInDatabaseException {
         return employeeService.update(id, employeeDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseDTO deleteById(@PathVariable Long id) throws NotFoundInDatabaseException {
         return employeeService.delete(id);
     }
-
 }
+
