@@ -3,7 +3,7 @@ package org.klodnicki.rest.controller;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;

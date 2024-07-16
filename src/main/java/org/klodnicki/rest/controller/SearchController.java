@@ -1,7 +1,7 @@
 package org.klodnicki.rest.controller;
 
 import lombok.AllArgsConstructor;
-import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.model.Department;
 import org.klodnicki.service.EmployeeService;
 import org.springframework.web.bind.annotation.GetMapping;

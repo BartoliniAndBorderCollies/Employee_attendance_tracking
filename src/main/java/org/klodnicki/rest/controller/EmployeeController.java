@@ -2,9 +2,9 @@ package org.klodnicki.rest.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.klodnicki.DTO.Employee.EmployeeDTORequest;
-import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
-import org.klodnicki.DTO.ResponseDTO;
+import org.klodnicki.dto.employee.EmployeeDTORequest;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
+import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.service.EmployeeService;
 import org.springframework.http.HttpStatus;

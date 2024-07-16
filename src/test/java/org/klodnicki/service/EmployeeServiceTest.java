@@ -2,9 +2,9 @@ package org.klodnicki.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.klodnicki.DTO.Employee.EmployeeDTORequest;
-import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
-import org.klodnicki.DTO.ResponseDTO;
+import org.klodnicki.dto.employee.EmployeeDTORequest;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
+import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Salary;

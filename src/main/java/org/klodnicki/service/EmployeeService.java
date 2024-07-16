@@ -1,9 +1,9 @@
 package org.klodnicki.service;
 
 import lombok.AllArgsConstructor;
-import org.klodnicki.DTO.Employee.EmployeeDTORequest;
-import org.klodnicki.DTO.Employee.EmployeeDTOResponse;
-import org.klodnicki.DTO.ResponseDTO;
+import org.klodnicki.dto.employee.EmployeeDTORequest;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
+import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.entity.Employee;

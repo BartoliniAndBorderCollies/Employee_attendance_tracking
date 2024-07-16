@@ -1,6 +1,6 @@
 package org.klodnicki.service.generic;
 
-import org.klodnicki.DTO.ResponseDTO;
+import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 
 import java.util.List;
