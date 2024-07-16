@@ -1,4 +1,4 @@
-package org.klodnicki.DTO.Employee;
+package org.klodnicki.dto.employee;
 
 import lombok.Data;
 import lombok.Getter;

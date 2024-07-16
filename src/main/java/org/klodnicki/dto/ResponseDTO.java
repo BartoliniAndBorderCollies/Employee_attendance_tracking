@@ -1,4 +1,4 @@
-package org.klodnicki.DTO;
+package org.klodnicki.dto;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;
