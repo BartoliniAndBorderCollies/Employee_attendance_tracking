@@ -36,6 +36,7 @@ class EmployeeControllerIntegrationTest {
     @Autowired
     private ModelMapper modelMapper;
     private Employee savedEmployee;
+    private static final String URI_MAIN_PATH = "/api/v1/employees";
 
     @BeforeEach
     void setUp() {
@@ -57,7 +58,7 @@ class EmployeeControllerIntegrationTest {
                 "email@test.pl", Department.DEPARTMENT1, new Salary(100.00));
 
         webTestClient.post()
-                .uri("/api/v1/employees")
+                .uri(URI_MAIN_PATH)
                 .bodyValue(employeeDTORequest)
                 .exchange()
                 .expectStatus().isCreated()
@@ -83,7 +84,7 @@ class EmployeeControllerIntegrationTest {
     public void findById_ShouldFindAndReturnEmployeeDTO_WhenEmployeeIdIsGiven() {
 
         webTestClient.get()
-                .uri("/api/v1/employees/find/" + savedEmployee.getId())
+                .uri(URI_MAIN_PATH + "/" + savedEmployee.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(EmployeeDTOResponse.class)
@@ -106,7 +107,7 @@ class EmployeeControllerIntegrationTest {
         List<EmployeeDTOResponse> expectedList = Arrays.asList(modelMapper.map(savedEmployee, EmployeeDTOResponse.class));
 
         webTestClient.get()
-                .uri("/api/v1/employees/findAll")
+                .uri(URI_MAIN_PATH)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(EmployeeDTOResponse.class)
@@ -133,7 +134,7 @@ class EmployeeControllerIntegrationTest {
                 "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00));
 
         webTestClient.put()
-                .uri("/api/v1/employees/update/" + employeeToBeUpdated.getId())
+                .uri(URI_MAIN_PATH + "/" + employeeToBeUpdated.getId())
                 .bodyValue(employeeDTORequest)
                 .exchange()
                 .expectStatus().isOk()
@@ -158,7 +159,7 @@ class EmployeeControllerIntegrationTest {
     public void deleteById_ShouldDeleteEmployee_WhenIdIsGiven() {
 
         webTestClient.delete()
-                .uri("/api/v1/employees/delete/" + savedEmployee.getId())
+                .uri(URI_MAIN_PATH + "/" + savedEmployee.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ResponseDTO.class)
