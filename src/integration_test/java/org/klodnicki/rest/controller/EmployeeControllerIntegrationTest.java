@@ -73,17 +73,16 @@ class EmployeeControllerIntegrationTest {
                     // Since NotFoundInDatabaseException is a checked exception and it is not declared
                     // in the method signature with a throws clause, it must be caught within the method.
                     Optional<Employee> optionalEmployee = employeeRepository.findById(actualResponse.getId());
-                    optionalEmployee.ifPresentOrElse(employee -> {
+                    assertTrue(optionalEmployee.isPresent(), "Employee not found in database");
 
-                        assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
-                        assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
-                        assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
-                        assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
-                        assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    Employee employee = optionalEmployee.get();
 
-                    }, () -> {
-                        throw new RuntimeException(new NotFoundInDatabaseException(Employee.class));
-                    });
+                    assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
+                    assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
+                    assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
+                    assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
+                    assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+
                 });
     }
 
