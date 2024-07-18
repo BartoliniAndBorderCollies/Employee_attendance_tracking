@@ -104,7 +104,7 @@ class EmployeeControllerIntegrationTest {
     @Test
     public void findAll_ShouldFindAndReturnListEmployeeDTOResponse_WhenExist() {
         //declare, initialize the list with savedEmployee converted straight to EmployeeDTOResponse
-        List<EmployeeDTOResponse> expectedList = Arrays.asList(modelMapper.map(savedEmployee, EmployeeDTOResponse.class));
+        List<EmployeeDTOResponse> expectedList = List.of(modelMapper.map(savedEmployee, EmployeeDTOResponse.class));
 
         webTestClient.get()
                 .uri(URI_MAIN_PATH)
