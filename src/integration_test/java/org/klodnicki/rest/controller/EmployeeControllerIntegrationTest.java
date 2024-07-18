@@ -143,17 +143,14 @@ class EmployeeControllerIntegrationTest {
                     assertNotNull(actualResponse);
 
                     Optional<Employee> optionalEmployee = employeeRepository.findById(employeeToBeUpdated.getId());
-                    optionalEmployee.ifPresentOrElse(employee ->
-                    {
-                        assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
-                        assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
-                        assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
-                        assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
-                        assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    assertTrue(optionalEmployee.isPresent(), "Employee not found in database");
 
-                    }, () -> {
-                        throw new RuntimeException("Employee not found in database");
-                    });
+                    Employee employee = optionalEmployee.get();
+                    assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
+                    assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
+                    assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
+                    assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
+                    assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
                 });
     }
 
