@@ -69,20 +69,15 @@ class EmployeeControllerIntegrationTest {
                     assertNotNull(actualResponse);
 
                     // Check if the employee was really created and added to the database.
-                    // If not, throw a custom NotFoundInDatabaseException.
-                    // Since NotFoundInDatabaseException is a checked exception and it is not declared
-                    // in the method signature with a throws clause, it must be caught within the method.
                     Optional<Employee> optionalEmployee = employeeRepository.findById(actualResponse.getId());
                     assertTrue(optionalEmployee.isPresent(), "Employee not found in database");
 
                     Employee employee = optionalEmployee.get();
-
                     assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
                     assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
                     assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
                     assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
                     assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
-
                 });
     }
 
