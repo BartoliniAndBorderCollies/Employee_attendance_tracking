@@ -59,7 +59,7 @@ class EmployeeControllerIntegrationTest {
                 "email@test.pl", Department.DEPARTMENT1, new Salary(100.00));
 
         webTestClient.post()
-                .uri("/api/v1/employees/create")
+                .uri("/api/v1/employees")
                 .bodyValue(employeeDTORequest)
                 .exchange()
                 .expectStatus().isCreated()
