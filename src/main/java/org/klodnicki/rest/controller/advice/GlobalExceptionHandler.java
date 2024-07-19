@@ -1,29 +1,33 @@
 package org.klodnicki.rest.controller.advice;
 
+import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ResponseEntity<>("You didn't provided all necessary information in request! " + e.getMessage(), HttpStatus.BAD_REQUEST);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return new ResponseDTO("You didn't provided all necessary information in request! " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<?> handleDuplicatedEntry(SQLIntegrityConstraintViolationException e) {
-        return new ResponseEntity<>("This entry already exist: " + e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseDTO handleDuplicatedEntry(SQLIntegrityConstraintViolationException e) {
+        return new ResponseDTO("This entry already exist: " + e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(NotFoundInDatabaseException.class)
-    public ResponseEntity<?> handleNotFoundInDatabaseException(NotFoundInDatabaseException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseDTO handleNotFoundInDatabaseException(NotFoundInDatabaseException e) {
+        return new ResponseDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
