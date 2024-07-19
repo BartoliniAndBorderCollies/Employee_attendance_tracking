@@ -44,6 +44,7 @@ class EmployeeControllerIntegrationTest {
     private Employee employee4;
     private Iterable<Employee> employees;
     private static final String URI_MAIN_PATH = "/api/v1/employees";
+    private static final String URI_FIND_BY_NAME = "/name?lastName=";
 
     @BeforeEach
     void prepareAndSaveInstancesToDatabase() {
@@ -100,7 +101,7 @@ class EmployeeControllerIntegrationTest {
     public void findById_ShouldFindAndReturnEmployeeDTO_WhenEmployeeIdIsGiven() {
 
         webTestClient.get()
-                .uri(URI_MAIN_PATH + "/" + savedEmployee.getId())
+                .uri(URI_MAIN_PATH + "/" + employee0.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(EmployeeDTOResponse.class)
@@ -175,7 +176,7 @@ class EmployeeControllerIntegrationTest {
     public void deleteById_ShouldDeleteEmployee_WhenIdIsGiven() {
 
         webTestClient.delete()
-                .uri(URI_MAIN_PATH + "/" + savedEmployee.getId())
+                .uri(URI_MAIN_PATH + "/" + employee0.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ResponseDTO.class)
