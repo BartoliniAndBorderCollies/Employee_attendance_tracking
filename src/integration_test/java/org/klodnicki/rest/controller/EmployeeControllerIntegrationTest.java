@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +37,29 @@ class EmployeeControllerIntegrationTest {
     private EmployeeRepository employeeRepository;
     @Autowired
     private ModelMapper modelMapper;
-    private Employee savedEmployee;
+    private Employee employee0;
+    private Employee employee1;
+    private Employee employee2;
+    private Employee employee3;
+    private Employee employee4;
+    private Iterable<Employee> employees;
     private static final String URI_MAIN_PATH = "/api/v1/employees";
 
     @BeforeEach
-    void setUp() {
+    void prepareAndSaveInstancesToDatabase() {
         // Save an employee to the database before each test
-        savedEmployee = new Employee("firstName", "LastName", "test@test.pl",
+        employee0 = new Employee("firstName", "LastName", "test@test.pl",
                 Department.DEPARTMENT3, new Salary(1000.00));
-        savedEmployee = employeeRepository.save(savedEmployee);
+        employee1 = new Employee("firstName1", "Klodnicki", "email1@email.com", Department.DEPARTMENT1,
+                new Salary(10000));
+        employee2 = new Employee("firstName2", "lastName2", "email2@email.com", Department.DEPARTMENT1,
+                new Salary(8000));
+        employee3 = new Employee("firstName3", "lastName3", "email3@email.com", Department.DEPARTMENT2,
+                new Salary(15000));
+        employee4 = new Employee("firstName4", "Klodnicki", "email4@email.com", Department.DEPARTMENT3,
+                new Salary(22000));
+
+        employees = employeeRepository.saveAll(Arrays.asList(employee0, employee1, employee2, employee3, employee4));
     }
 
     @AfterEach
@@ -92,12 +108,12 @@ class EmployeeControllerIntegrationTest {
                     EmployeeDTOResponse actualResponse = response.getResponseBody();
                     assertNotNull(actualResponse);
 
-                    assertEquals(savedEmployee.getId(), actualResponse.getId());
-                    assertEquals(savedEmployee.getFirstName(), actualResponse.getFirstName());
-                    assertEquals(savedEmployee.getLastName(), actualResponse.getLastName());
-                    assertEquals(savedEmployee.getEmail(), actualResponse.getEmail());
-                    assertEquals(savedEmployee.getDepartment(), actualResponse.getDepartment());
-                    assertEquals(savedEmployee.getSalary(), actualResponse.getSalary());
+                    assertEquals(employee0.getId(), actualResponse.getId());
+                    assertEquals(employee0.getFirstName(), actualResponse.getFirstName());
+                    assertEquals(employee0.getLastName(), actualResponse.getLastName());
+                    assertEquals(employee0.getEmail(), actualResponse.getEmail());
+                    assertEquals(employee0.getDepartment(), actualResponse.getDepartment());
+                    assertEquals(employee0.getSalary(), actualResponse.getSalary());
                 });
     }
 
@@ -168,11 +184,11 @@ class EmployeeControllerIntegrationTest {
                     assertNotNull(actualResponse, "Response body should not be null");
 
                     //check if it was deleted and does not exist in db anymore
-                    Optional<Employee> shouldBeEmpty = employeeRepository.findById(savedEmployee.getId());
+                    Optional<Employee> shouldBeEmpty = employeeRepository.findById(employee0.getId());
                     assertTrue(shouldBeEmpty.isEmpty());
 
-                    assertEquals(actualResponse.getMessage(), "Employee " + savedEmployee.getFirstName() + " " +
-                            savedEmployee.getLastName() + " has been successfully deleted!");
+                    assertEquals(actualResponse.getMessage(), "Employee " + employee0.getFirstName() + " " +
+                            employee0.getLastName() + " has been successfully deleted!");
                     assertEquals(actualResponse.getStatus(), HttpStatus.OK);
                 });
     }
