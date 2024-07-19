@@ -119,8 +119,11 @@ class EmployeeControllerIntegrationTest {
 
     @Test
     public void findAll_ShouldFindAndReturnListEmployeeDTOResponse_WhenExist() {
-        //declare, initialize the list with savedEmployee converted straight to EmployeeDTOResponse
-        List<EmployeeDTOResponse> expectedList = List.of(modelMapper.map(savedEmployee, EmployeeDTOResponse.class));
+        List<EmployeeDTOResponse> expectedList = new ArrayList<>();
+        employees.forEach(employee -> {
+            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+            expectedList.add(employeeDTOResponse);
+        });
 
         webTestClient.get()
                 .uri(URI_MAIN_PATH)
@@ -133,10 +136,7 @@ class EmployeeControllerIntegrationTest {
                     assertFalse(actualResponse.isEmpty(), "Response body should not be empty");
 
                     // Assert that actualResponse contains exactly the same elements as expectedList
-                    assertThat(actualResponse)
-                            .usingRecursiveComparison()
-                            .ignoringFields("id") // Ignore ID field for comparison
-                            .isEqualTo(expectedList);
+                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expectedList);
                 });
     }
 
