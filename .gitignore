@@ -1,0 +1,24 @@
+# Ignore all .idea files and directories
+.idea/
+
+# Ignore other OS and IDE-specific files
+*.iml
+*.iws
+*.ipr
+*.class
+*.log
+*.war
+*.ear
+*.swp
+.DS_Store
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.vscode/
+
+# Ignore Maven and Gradle wrapper files
+target/
+build/
+
+# Ignore log files
+*.log
