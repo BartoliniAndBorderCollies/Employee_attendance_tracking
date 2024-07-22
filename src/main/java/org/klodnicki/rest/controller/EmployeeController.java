@@ -53,7 +53,7 @@ public class EmployeeController {
      * @param lastName The last name of the employees to search for.
      * @return A list of employees matching the given last name.
      */
-    @GetMapping("/name")
+    @GetMapping(params = "lastName")
     public List<EmployeeDTOResponse> findByName (@RequestParam("lastName") String lastName) {
         return employeeService.findByName(lastName);
     }
@@ -75,7 +75,7 @@ public class EmployeeController {
      * @param department The department to search for employees in.
      * @return A list of employees belonging to the specified department.
      */
-    @GetMapping("/department")
+    @GetMapping(params = "department")
     public List<EmployeeDTOResponse> findByDepartment (@RequestParam("department") Department department) {
         return employeeService.findByDepartment(department);
     }
