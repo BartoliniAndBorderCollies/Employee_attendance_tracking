@@ -2,6 +2,7 @@ package org.klodnicki.rest.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
@@ -38,11 +39,6 @@ class EmployeeControllerIntegrationTest {
     @Autowired
     private ModelMapper modelMapper;
     private Employee employee0;
-    private Employee employee1;
-    private Employee employee2;
-    private Employee employee3;
-    private Employee employee4;
-    private Iterable<Employee> employees;
     private static final String URI_MAIN_PATH = "/api/v1/employees";
     private static final String URI_FIND_BY_NAME = "/name?lastName=";
 
@@ -51,16 +47,8 @@ class EmployeeControllerIntegrationTest {
         // Save an employee to the database before each test
         employee0 = new Employee("firstName", "LastName", "test@test.pl",
                 Department.DEPARTMENT3, new Salary(1000.00));
-        employee1 = new Employee("firstName1", "Klodnicki", "email1@email.com", Department.DEPARTMENT1,
-                new Salary(10000));
-        employee2 = new Employee("firstName2", "lastName2", "email2@email.com", Department.DEPARTMENT1,
-                new Salary(8000));
-        employee3 = new Employee("firstName3", "lastName3", "email3@email.com", Department.DEPARTMENT2,
-                new Salary(15000));
-        employee4 = new Employee("firstName4", "Klodnicki", "email4@email.com", Department.DEPARTMENT3,
-                new Salary(22000));
 
-        employees = employeeRepository.saveAll(Arrays.asList(employee0, employee1, employee2, employee3, employee4));
+        employeeRepository.save(employee0);
     }
 
     @AfterEach
@@ -119,29 +107,6 @@ class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    public void findAll_ShouldFindAndReturnListEmployeeDTOResponse_WhenExist() {
-        List<EmployeeDTOResponse> expectedList = new ArrayList<>();
-        employees.forEach(employee -> {
-            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
-            expectedList.add(employeeDTOResponse);
-        });
-
-        webTestClient.get()
-                .uri(URI_MAIN_PATH)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(EmployeeDTOResponse.class)
-                .consumeWith(response -> {
-                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
-                    assertNotNull(actualResponse, "Response body should not be null");
-                    assertFalse(actualResponse.isEmpty(), "Response body should not be empty");
-
-                    // Assert that actualResponse contains exactly the same elements as expectedList
-                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expectedList);
-                });
-    }
-
-    @Test
     public void update_ShouldUpdateEmployeeOnDatabase_WhenEmployeeDTORequestAndIdAreGiven() {
         Employee employeeToBeUpdated = new Employee("firstName", "LastName", "update@update.pl",
                 Department.DEPARTMENT3, new Salary(1000.00));
@@ -194,78 +159,126 @@ class EmployeeControllerIntegrationTest {
                 });
     }
 
-    @Test
-    public void findByName_ShouldReturnListEmployeeDTOWithGivenLastName_WhenLastNameIsGiven() {
-        String lastName = "Klodnicki";
-        List<Employee> klodnickiEmployees = Arrays.asList(employee1, employee4);
-        List<EmployeeDTOResponse> expected = new ArrayList<>();
+    @Nested
+    class nestedClassForMultiEmployeesTests {
 
-        klodnickiEmployees.forEach(klodnicki -> {
-            EmployeeDTOResponse employeeKlodnickiDTO = modelMapper.map(klodnicki, EmployeeDTOResponse.class);
-            expected.add(employeeKlodnickiDTO);
-        });
+        private Employee employee1;
+        private Employee employee2;
+        private Employee employee3;
+        private Employee employee4;
+        private Iterable<Employee> employees;
 
-        webTestClient.get()
-                .uri(URI_MAIN_PATH + URI_FIND_BY_NAME + lastName)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(EmployeeDTOResponse.class)
-                .consumeWith(response -> {
-                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
-                    assertNotNull(actualResponse, "Actual response should not be null");
-                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
-                });
-    }
+        @BeforeEach
+        void prepareEmployeesList() {
+            employeeRepository.deleteAll();
+            employee1 = new Employee("firstName1", "Klodnicki", "email1@email.com", Department.DEPARTMENT1,
+                    new Salary(10000));
+            employee2 = new Employee("firstName2", "lastName2", "email2@email.com", Department.DEPARTMENT1,
+                    new Salary(8000));
+            employee3 = new Employee("firstName3", "lastName3", "email3@email.com", Department.DEPARTMENT2,
+                    new Salary(15000));
+            employee4 = new Employee("firstName4", "Klodnicki", "email4@email.com", Department.DEPARTMENT3,
+                    new Salary(22000));
 
-    @Test
-    public void findBySalaryRange_ShouldReturnListEmployeeDTOWithSalaryRange_WhenRangeIsGiven() {
-        double minSalary = 5000;
-        double maxSalary = 12000;
-        List<EmployeeDTOResponse> expected = new ArrayList<>();
-        List<Employee> employeeInRange = Arrays.asList(employee1, employee2);
+            employees = employeeRepository.saveAll(Arrays.asList(employee1, employee2, employee3, employee4));
+        }
 
-        employeeInRange.forEach(employee -> {
-            EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
-            expected.add(employeeDTOResponse);
-        });
+        @Test
+        public void findAll_ShouldFindAndReturnListEmployeeDTOResponse_WhenExist() {
+            List<EmployeeDTOResponse> expectedList = new ArrayList<>();
+            employees.forEach(employee -> {
+                EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+                expectedList.add(employeeDTOResponse);
+            });
 
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(URI_MAIN_PATH + "/salary")
-                        .queryParam("from", minSalary)
-                        .queryParam("to", maxSalary)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(EmployeeDTOResponse.class)
-                .consumeWith(response -> {
-                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
-                    assertNotNull(actualResponse, "Actual response should not be null");
-                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
-                });
-    }
+            webTestClient.get()
+                    .uri(URI_MAIN_PATH)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBodyList(EmployeeDTOResponse.class)
+                    .consumeWith(response -> {
+                        List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                        assertNotNull(actualResponse, "Response body should not be null");
+                        assertFalse(actualResponse.isEmpty(), "Response body should not be empty");
 
-    @Test
-    public void findByDepartment_ShouldReturnListEmployeeDTOWithAppropriateDepartment_WhenDepartmentIsGiven() {
-        String departmentName = Department.DEPARTMENT1.name();
-        List<EmployeeDTOResponse> expected = new ArrayList<>();
-        List<Employee> department1Employees = Arrays.asList(employee1, employee2);
+                        // Assert that actualResponse contains exactly the same elements as expectedList
+                        assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expectedList);
+                    });
+        }
 
-        department1Employees.forEach(employee -> {
-            EmployeeDTOResponse employeeDTOresponse = modelMapper.map(employee, EmployeeDTOResponse.class);
-            expected.add(employeeDTOresponse);
-        });
+        @Test
+        public void findByName_ShouldReturnListEmployeeDTOWithGivenLastName_WhenLastNameIsGiven() {
+            String lastName = "Klodnicki";
+            List<Employee> klodnickiEmployees = Arrays.asList(employee1, employee4);
+            List<EmployeeDTOResponse> expected = new ArrayList<>();
 
-        webTestClient.get()
-                .uri(URI_MAIN_PATH + "/department?department=" + departmentName)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(EmployeeDTOResponse.class)
-                .consumeWith(response -> {
-                    List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
-                    assertNotNull(actualResponse, "Actual response should not be null");
-                    assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
-                });
+            klodnickiEmployees.forEach(klodnicki -> {
+                EmployeeDTOResponse employeeKlodnickiDTO = modelMapper.map(klodnicki, EmployeeDTOResponse.class);
+                expected.add(employeeKlodnickiDTO);
+            });
+
+            webTestClient.get()
+                    .uri(URI_MAIN_PATH + URI_FIND_BY_NAME + lastName)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBodyList(EmployeeDTOResponse.class)
+                    .consumeWith(response -> {
+                        List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                        assertNotNull(actualResponse, "Actual response should not be null");
+                        assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
+                    });
+        }
+
+        @Test
+        public void findBySalaryRange_ShouldReturnListEmployeeDTOWithSalaryRange_WhenRangeIsGiven() {
+            double minSalary = 5000;
+            double maxSalary = 12000;
+            List<EmployeeDTOResponse> expected = new ArrayList<>();
+            List<Employee> employeeInRange = Arrays.asList(employee1, employee2);
+
+            employeeInRange.forEach(employee -> {
+                EmployeeDTOResponse employeeDTOResponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+                expected.add(employeeDTOResponse);
+            });
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(URI_MAIN_PATH + "/salary")
+                            .queryParam("from", minSalary)
+                            .queryParam("to", maxSalary)
+                            .build())
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBodyList(EmployeeDTOResponse.class)
+                    .consumeWith(response -> {
+                        List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                        assertNotNull(actualResponse, "Actual response should not be null");
+                        assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
+                    });
+        }
+
+        @Test
+        public void findByDepartment_ShouldReturnListEmployeeDTOWithAppropriateDepartment_WhenDepartmentIsGiven() {
+            String departmentName = Department.DEPARTMENT1.name();
+            List<EmployeeDTOResponse> expected = new ArrayList<>();
+            List<Employee> department1Employees = Arrays.asList(employee1, employee2);
+
+            department1Employees.forEach(employee -> {
+                EmployeeDTOResponse employeeDTOresponse = modelMapper.map(employee, EmployeeDTOResponse.class);
+                expected.add(employeeDTOresponse);
+            });
+
+            webTestClient.get()
+                    .uri(URI_MAIN_PATH + "/department?department=" + departmentName)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBodyList(EmployeeDTOResponse.class)
+                    .consumeWith(response -> {
+                        List<EmployeeDTOResponse> actualResponse = response.getResponseBody();
+                        assertNotNull(actualResponse, "Actual response should not be null");
+                        assertThat(actualResponse).containsExactlyInAnyOrderElementsOf(expected);
+                    });
+        }
     }
 
 }
