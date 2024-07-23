@@ -40,7 +40,7 @@ class EmployeeControllerIntegrationTest {
     private ModelMapper modelMapper;
     private Employee employee0;
     private static final String URI_MAIN_PATH = "/api/v1/employees";
-    private static final String URI_FIND_BY_NAME = "/name?lastName=";
+    private static final String URI_FIND_BY_NAME = "?lastName=";
 
     @BeforeEach
     void prepareAndSaveInstancesToDatabase() {
@@ -269,7 +269,7 @@ class EmployeeControllerIntegrationTest {
             });
 
             webTestClient.get()
-                    .uri(URI_MAIN_PATH + "/department?department=" + departmentName)
+                    .uri(URI_MAIN_PATH + "?department=" + departmentName)
                     .exchange()
                     .expectStatus().isOk()
                     .expectBodyList(EmployeeDTOResponse.class)
