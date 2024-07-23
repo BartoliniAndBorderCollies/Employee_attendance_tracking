@@ -31,7 +31,7 @@ employees can now also share their phone number. At least one is required now.)
 - PESEL or NIP
 - Date of employment
 
-More technical documentation about those can be found in the separate document.
+More technical documentation about those can be found in the separate document (provided below).
 
 ## Improved searching
 Searching for employees should now include all the existing and new options. Explanation:
@@ -47,6 +47,91 @@ everything from the system into single .csv file.
 
 ## Time constraint
 No deadline.
+
+## Employee attendance tracking
+System A
+Clocks sends the data in JSON format exactly* like this: 
+
+{ <br>
+
+"badgeNumber": "12345", <br>
+"location": "Factory hall #01", <br>
+"device": "RFID card reader #0123" <br>
+
+}
+
+* the values are not real.
+
+System B
+Clocks sends the data in JSON format exactly* like this: <br>
+
+{ <br>
+
+"badgeNumber": "12345", <br>
+"action": "clock-in", <br>
+"timestamp": "2024-01-18T14:21:51Z", <br>
+"location": "Warehouse entrance #02", <br>
+"device": "RFID card reader #789" <br>
+
+}
+
+* the values are not real.
+
+Overview
+action can be "clock-in" or "clock-out".
+System A doesn't send action type, which implies that external service has to decide what it
+was.
+
+Searching
+Below are some examples and further explanation of what's required in specific search
+queries.
+
+By name <br>
+
+{ <br>
+
+"badgeNumber": "12345", <br>
+"location": "Factory hall #01", <br>
+"device": "RFID card reader #0123" <br>
+
+} <br>
+
+{ <br>
+
+"badgeNumber": "12345", <br>
+"action": "clock-in", <br>
+"timestamp": "2024-01-18T14:21:51Z", <br>
+"location": "Warehouse entrance #02", <br>
+"device": "RFID card reader #789" <br>
+
+} <br>
+
+Considering simplified example and an employee table like this:
+First name Last name
+Jimmy Smith
+David Bowie
+Simon Brown
+John Davidson
+Sarah Davis
+Laura Thomas
+Input Davi should return such list of employees:
+
+[ <br>
+
+"David Bowie", <br>
+"John Davidson", <br>
+"Sarah Davis" <br>
+]
+
+By date
+Exclusive range - searching by from: 2023-10-29 and to: 2023-11-13 should include
+given dates in the search.
+
+By address
+Should allow to search by various combinations of address components, such as postal
+code and country, or street and postal code. It should not be mandatory to input all address
+details. Instead, system should allow to provide one component, but not restrict to combine
+multiple components, too, for more precise search results.
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
