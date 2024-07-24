@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.dto.ResponseDTO;
+import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
+import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +49,9 @@ class EmployeeControllerIntegrationTest {
     void prepareAndSaveInstancesToDatabase() {
         // Save an employee to the database before each test
         employee0 = new Employee("firstName", "LastName", "test@test.pl",
-                Department.DEPARTMENT3, new Salary(1000.00));
+                Department.DEPARTMENT3, new Salary(1000.00), "Gdańsk", LocalDate.of(1991, 2, 21),
+                Gender.MALE, new Address(),"123456789", "11-04-0000-1111-2345-2345",
+                "Pesel 123453423234", LocalDate.of(2024, 7, 10));
 
         employeeRepository.save(employee0);
     }
@@ -109,7 +114,9 @@ class EmployeeControllerIntegrationTest {
     @Test
     public void update_ShouldUpdateEmployeeOnDatabase_WhenEmployeeDTORequestAndIdAreGiven() {
         Employee employeeToBeUpdated = new Employee("firstName", "LastName", "update@update.pl",
-                Department.DEPARTMENT3, new Salary(1000.00));
+                Department.DEPARTMENT3, new Salary(1000.00), "Warszawa updated", LocalDate.of(1900,1,1),
+                Gender.FEMALE, new Address(), "11111111111", "bank account number",
+                "NIP 789-111-111-12", LocalDate.of(2024,7,19));
         employeeRepository.save(employeeToBeUpdated);
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("updatedFirstName", "updatedLastName",
@@ -171,14 +178,70 @@ class EmployeeControllerIntegrationTest {
         @BeforeEach
         void prepareEmployeesList() {
             employeeRepository.deleteAll();
-            employee1 = new Employee("firstName1", "Klodnicki", "email1@email.com", Department.DEPARTMENT1,
-                    new Salary(10000));
-            employee2 = new Employee("firstName2", "lastName2", "email2@email.com", Department.DEPARTMENT1,
-                    new Salary(8000));
-            employee3 = new Employee("firstName3", "lastName3", "email3@email.com", Department.DEPARTMENT2,
-                    new Salary(15000));
-            employee4 = new Employee("firstName4", "Klodnicki", "email4@email.com", Department.DEPARTMENT3,
-                    new Salary(22000));
+
+            employee1 = new Employee(
+                    "John",
+                    "Klodnicki",
+                    "email1@email.com",
+                    Department.DEPARTMENT1,
+                    new Salary(10000.00),
+                    "Milano",
+                    LocalDate.of(1990, 5, 15),
+                    Gender.MALE,
+                    new Address("Main St", "123", "20100", "Milano", "Italy"),
+                    "123456789",
+                    "11-22-3333-4444-5555",
+                    "Pesel 12345678901",
+                    LocalDate.of(2015, 1, 10)
+            );
+
+            employee2 = new Employee(
+                    "Alice",
+                    "Smith",
+                    "email2@email.com",
+                    Department.DEPARTMENT1,
+                    new Salary(8000.00),
+                    "New York",
+                    LocalDate.of(1985, 8, 22),
+                    Gender.FEMALE,
+                    new Address("Broadway", "456", "10001", "New York", "USA"),
+                    "987654321",
+                    "22-33-4444-5555-6666",
+                    "Pesel 23456789012",
+                    LocalDate.of(2018, 3, 5)
+            );
+
+            employee3 = new Employee(
+                    "Michael",
+                    "Johnson",
+                    "email3@email.com",
+                    Department.DEPARTMENT2,
+                    new Salary(15000.00),
+                    "Los Angeles",
+                    LocalDate.of(1992, 12, 10),
+                    Gender.MALE,
+                    new Address("Sunset Blvd", "789", "90001", "Los Angeles", "USA"),
+                    "1122334455",
+                    "33-44-5555-6666-7777",
+                    "Pesel 34567890123",
+                    LocalDate.of(2020, 5, 20)
+            );
+
+            employee4 = new Employee(
+                    "Emma",
+                    "Klodnicki",
+                    "email4@email.com",
+                    Department.DEPARTMENT3,
+                    new Salary(22000.00),
+                    "Paris",
+                    LocalDate.of(1988, 7, 18),
+                    Gender.FEMALE,
+                    new Address("Champs Elysees", "321", "75008", "Paris", "France"),
+                    "5566778899",
+                    "44-55-6666-7777-8888",
+                    "Pesel 45678901234",
+                    LocalDate.of(2017, 9, 25)
+            );
 
             employees = employeeRepository.saveAll(Arrays.asList(employee1, employee2, employee3, employee4));
         }
