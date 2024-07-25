@@ -6,7 +6,9 @@ import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
+import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
+import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
@@ -16,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +50,9 @@ class EmployeeServiceTest {
     @BeforeEach
     public void setUp() {
         employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
-                new Salary(100.00));
+                new Salary(100.00), LocalDate.of(1957, 12, 10), Gender.FEMALE, new Address(),
+                "telephone 123443", "bank account 321", "nip123321",
+                LocalDate.of(1998, 10, 11));
     }
 
     @Test
