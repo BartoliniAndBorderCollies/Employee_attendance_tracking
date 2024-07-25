@@ -27,6 +27,10 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
     @Override
     public EmployeeDTOResponse create(EmployeeDTORequest employeeDTO) {
+        if (employeeDTO.getEmail() == null && employeeDTO.getTelephoneNumber() == null) {
+            throw new IllegalArgumentException("Email or telephone number must be provided!");
+        }
+
         Employee employee = modelMapper.map(employeeDTO, Employee.class);
         Employee savedEmployee = employeeRepository.save(employee);
 

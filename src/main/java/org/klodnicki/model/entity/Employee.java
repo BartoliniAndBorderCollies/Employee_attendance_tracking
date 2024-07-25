@@ -21,9 +21,6 @@ public class Employee extends Person {
                      String peselOrNip, LocalDate dateOfEmployment) {
         super(firstName, lastName, email);
 
-        if(email == null && telephoneNumber == null)
-            throw new IllegalArgumentException("Email or telephone number must be provided!");
-
         this.department = department;
         this.salary = salary;
         this.birthPlace = birthPlace;
