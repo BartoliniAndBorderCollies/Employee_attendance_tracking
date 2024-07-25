@@ -7,8 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
+import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,4 +31,11 @@ public class EmployeeDTORequest {
     private Department department;
     @NotNull(message = "Salary must be given!")
     private Salary salary;
+    private LocalDate birthDate;
+    private Gender gender;
+    private Address address;
+    private String telephoneNumber;
+    private String bankAccountNumber;
+    private String peselOrNip;
+    private LocalDate dateOfEmployment;
 }
