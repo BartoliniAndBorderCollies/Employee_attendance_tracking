@@ -1,16 +1,14 @@
 package org.klodnicki.model;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Address {
 
     private String street;
