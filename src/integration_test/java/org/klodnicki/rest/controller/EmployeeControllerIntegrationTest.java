@@ -65,7 +65,9 @@ class EmployeeControllerIntegrationTest {
     public void create_ShouldAddEmployeeToDatabaseAndReturnEmployeeDTOResponse_WhenEmployeeDTORequestIsGiven() {
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("firstName", "lastName",
-                "email@test.pl", Department.DEPARTMENT1, new Salary(100.00));
+                "email@test.pl", Department.DEPARTMENT1, new Salary(100.00), LocalDate.of(1999, 1,1),
+                Gender.FEMALE, new Address(), "123telephone", "123bankAccount",
+                "StringOrPesel", LocalDate.of(2022, 2,1));
 
         webTestClient.post()
                 .uri(URI_MAIN_PATH)
@@ -120,7 +122,9 @@ class EmployeeControllerIntegrationTest {
         employeeRepository.save(employeeToBeUpdated);
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("updatedFirstName", "updatedLastName",
-                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00));
+                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00),
+                LocalDate.of(1983, 9, 12), Gender.FEMALE, new Address(), "updated phone",
+                "updated bank account", "updated pesel", LocalDate.of(1922, 3,3));
 
         webTestClient.put()
                 .uri(URI_MAIN_PATH + "/" + employeeToBeUpdated.getId())
