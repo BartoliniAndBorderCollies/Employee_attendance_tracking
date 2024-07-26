@@ -18,7 +18,7 @@ public class Employee extends Person {
 
     public Employee (String firstName, String lastName, String email, Department department, Salary salary, String birthPlace,
                      LocalDate birthDate, Gender gender, Address address, String telephoneNumber, String bankAccountNumber,
-                     String peselOrNip, LocalDate dateOfEmployment) {
+                     String peselOrNip, LocalDate dateOfEmployment, Badge badge) {
         super(firstName, lastName, email);
 
         this.department = department;
@@ -31,6 +31,7 @@ public class Employee extends Person {
         this.bankAccountNumber = bankAccountNumber;
         this.peselOrNip = peselOrNip;
         this.dateOfEmployment = dateOfEmployment;
+        this.badge = badge;
     }
 
     @Id
@@ -51,5 +52,7 @@ public class Employee extends Person {
     private String bankAccountNumber;
     private String peselOrNip;
     private LocalDate dateOfEmployment;
+    @OneToOne
+    private Badge badge;
 
 }
