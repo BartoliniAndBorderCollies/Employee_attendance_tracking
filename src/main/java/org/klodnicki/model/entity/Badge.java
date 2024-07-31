@@ -26,6 +26,7 @@ public class Badge {
     private Action action;
     private LocalDateTime timeStamp;
     @OneToOne
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
 }

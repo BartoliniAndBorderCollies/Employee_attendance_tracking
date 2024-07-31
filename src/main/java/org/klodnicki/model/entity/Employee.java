@@ -52,7 +52,7 @@ public class Employee extends Person {
     private String bankAccountNumber;
     private String peselOrNip;
     private LocalDate dateOfEmployment;
-    @OneToOne
+    @OneToOne(mappedBy = "employee")
     private Badge badge;
 
 }
