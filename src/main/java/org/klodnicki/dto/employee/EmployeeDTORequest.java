@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.klodnicki.dto.BadgeSystemB_DTO;
 import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
@@ -38,4 +39,6 @@ public class EmployeeDTORequest {
     private String bankAccountNumber;
     private String peselOrNip;
     private LocalDate dateOfEmployment;
+    private BadgeSystemB_DTO badge;
+
 }
