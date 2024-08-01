@@ -3,7 +3,7 @@ package org.klodnicki.dto.employee;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.klodnicki.dto.BadgeSystemA_DTO;
+import org.klodnicki.dto.badge.BadgeSystemA_DTO;
 import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;

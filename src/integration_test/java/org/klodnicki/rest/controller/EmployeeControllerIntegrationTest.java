@@ -11,6 +11,7 @@ import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
+import org.klodnicki.model.entity.Badge;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
