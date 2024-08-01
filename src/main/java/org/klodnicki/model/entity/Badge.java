@@ -19,6 +19,7 @@ public class Badge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String badgeNumber;
     private String location;
     private String deviceName;
