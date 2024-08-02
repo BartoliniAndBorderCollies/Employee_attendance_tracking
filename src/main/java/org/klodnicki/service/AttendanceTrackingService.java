@@ -1,0 +1,75 @@
+package org.klodnicki.service;
+
+import lombok.AllArgsConstructor;
+import org.klodnicki.dto.badge.BadgeSystemA_DTO;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
+import org.klodnicki.exception.NotFoundInDatabaseException;
+import org.klodnicki.model.Action;
+import org.klodnicki.model.entity.Badge;
+import org.klodnicki.model.entity.Employee;
+import org.klodnicki.repository.BadgeRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+@AllArgsConstructor
+public class AttendanceTrackingService {
+
+    private final BadgeRepository badgeRepository;
+    private final EmployeeService employeeService;
+    private final ModelMapper modelMapper;
+
+
+    //This method is used when the Employee gets his/her personal badge in System A tracking service
+    public void handlingBadgeToEmployeeSystemA(BadgeSystemA_DTO badgeSystemADto, Long employeeId) throws NotFoundInDatabaseException {
+
+        Badge badge = new Badge();
+        badge.setBadgeNumber(badgeSystemADto.getBadgeNumber());
+        badge.setLocation(badgeSystemADto.getLocation());
+        badge.setDeviceName(badgeSystemADto.getDeviceName());
+
+        EmployeeDTOResponse employeeDTOResponse = employeeService.findById(employeeId);
+        Employee mappedEmployee = modelMapper.map(employeeDTOResponse, Employee.class);
+
+        badge.setEmployee(mappedEmployee);
+
+        badgeRepository.save(badge);
+    }
+
+    //This method is used when the Employee gets his/her personal badge in System B tracking service
+    public void handlingBadgeToEmployeeSystemB(BadgeSystemB_DTO badgeSystemBDto, Long employeeId) throws NotFoundInDatabaseException {
+
+        Badge badge = new Badge();
+        badge.setBadgeNumber(badgeSystemBDto.getBadgeNumber());
+        badge.setLocation(badgeSystemBDto.getLocation());
+        badge.setDeviceName(badgeSystemBDto.getDeviceName());
+        badge.setAction(determineAction(badge.getBadgeNumber()));
+        badge.setTimeStamp(LocalDateTime.now());
+
+        EmployeeDTOResponse employeeDTOResponse = employeeService.findById(employeeId);
+        Employee mappedEmployee = modelMapper.map(employeeDTOResponse, Employee.class);
+
+        badge.setEmployee(mappedEmployee);
+
+        badgeRepository.save(badge);
+    }
+
+    private Badge findByBadgeNumber(String badgeNumber) throws NotFoundInDatabaseException {
+        return badgeRepository.findByBadgeNumber(badgeNumber).orElseThrow(() -> new NotFoundInDatabaseException(Badge.class));
+    }
+
+    private Action determineAction(String badgeNumber) throws NotFoundInDatabaseException {
+        Badge badge = findByBadgeNumber(badgeNumber);
+
+        if (badge.getAction() == null || badge.getAction() == Action.CLOCK_OUT) {
+            return Action.CLOCK_IN;
+        } else {
+            return Action.CLOCK_OUT;
+        }
+    }
+
+
+}
