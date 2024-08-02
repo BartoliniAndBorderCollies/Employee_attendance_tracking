@@ -5,10 +5,7 @@ import org.klodnicki.dto.badge.BadgeSystemA_DTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.service.AttendanceTrackingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -29,7 +26,15 @@ public class AttendanceTrackingController {
         }
     }
 
-
-
+    // Endpoint for assigning badge to Employee in system A
+    @PostMapping("/systemA/assign/{employeeId}")
+    public ResponseEntity<String> assignBadgeToEmployeeSystemA (@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable Long employeeId) {
+        try {
+            attendanceTrackingService.assignBadgeToEmployeeSystemA(badgeSystemADto, employeeId);
+            return ResponseEntity.ok("Badge assigned successfully for System A");
+        } catch (NotFoundInDatabaseException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
 }
