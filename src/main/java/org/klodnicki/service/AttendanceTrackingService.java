@@ -24,7 +24,7 @@ public class AttendanceTrackingService {
 
 
     //This method is used when the Employee gets his/her personal badge in System A tracking service
-    public void handlingBadgeToEmployeeSystemA(BadgeSystemA_DTO badgeSystemADto, Long employeeId) throws NotFoundInDatabaseException {
+    public void assignBadgeToEmployeeSystemA(BadgeSystemA_DTO badgeSystemADto, Long employeeId) throws NotFoundInDatabaseException {
 
         Badge badge = new Badge();
         badge.setBadgeNumber(badgeSystemADto.getBadgeNumber());
@@ -40,7 +40,7 @@ public class AttendanceTrackingService {
     }
 
     //This method is used when the Employee gets his/her personal badge in System B tracking service
-    public void handlingBadgeToEmployeeSystemB(BadgeSystemB_DTO badgeSystemBDto, Long employeeId) throws NotFoundInDatabaseException {
+    public void assignBadgeToEmployeeSystemB(BadgeSystemB_DTO badgeSystemBDto, Long employeeId) throws NotFoundInDatabaseException {
 
         Badge badge = new Badge();
         badge.setBadgeNumber(badgeSystemBDto.getBadgeNumber());
