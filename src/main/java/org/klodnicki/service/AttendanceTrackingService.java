@@ -71,5 +71,29 @@ public class AttendanceTrackingService {
         }
     }
 
+    // method for enter/exit the work - system A
+    public void scanBadgeSystemA(BadgeSystemA_DTO badgeSystemADto) throws NotFoundInDatabaseException {
+
+        Badge badge = findByBadgeNumber(badgeSystemADto.getBadgeNumber());
+
+        badge.setLocation(badgeSystemADto.getLocation());
+        badge.setDeviceName(badgeSystemADto.getDeviceName());
+
+        badgeRepository.save(badge);
+    }
+
+    // method for enter/exit the work - system B
+    public void scanBadgeSystemB(BadgeSystemB_DTO badgeSystemBDto) throws NotFoundInDatabaseException {
+
+        Badge badge = findByBadgeNumber(badgeSystemBDto.getBadgeNumber());
+
+        badge.setLocation(badgeSystemBDto.getLocation());
+        badge.setDeviceName(badgeSystemBDto.getDeviceName());
+        badge.setAction(determineAction(badge.getBadgeNumber()));
+        badge.setTimeStamp(LocalDateTime.now());
+
+        badgeRepository.save(badge);
+    }
+
 
 }
