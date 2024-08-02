@@ -17,7 +17,7 @@ public class AttendanceTrackingController {
 
     private final AttendanceTrackingService attendanceTrackingService;
 
-    // Endpoint for handling badge data from System A
+    // Endpoint for scanning badge in system A
     @PostMapping("/systemA/scan")
     public ResponseEntity<String> scanBadgeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto) {
 
