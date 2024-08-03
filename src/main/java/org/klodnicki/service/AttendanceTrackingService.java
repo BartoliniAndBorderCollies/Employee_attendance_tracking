@@ -46,7 +46,7 @@ public class AttendanceTrackingService {
         badge.setBadgeNumber(badgeSystemBDto.getBadgeNumber());
         badge.setLocation(badgeSystemBDto.getLocation());
         badge.setDeviceName(badgeSystemBDto.getDeviceName());
-        badge.setAction(determineAction(badge.getBadgeNumber()));
+        badge.setAction(Action.CLOCK_IN);
         badge.setTimeStamp(LocalDateTime.now());
 
         EmployeeDTOResponse employeeDTOResponse = employeeService.findById(employeeId);
