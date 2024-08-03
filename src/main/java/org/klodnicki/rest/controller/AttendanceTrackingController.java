@@ -16,11 +16,11 @@ public class AttendanceTrackingController {
     private final AttendanceTrackingService attendanceTrackingService;
 
     // Endpoint for scanning badge in system A
-    @PostMapping("/systemA/scan")
-    public ResponseEntity<String> scanBadgeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto) {
+    @PutMapping("/systemA/scan/{badgeNumber}")
+    public ResponseEntity<String> scanBadgeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable String badgeNumber) {
 
         try {
-            attendanceTrackingService.scanBadgeSystemA(badgeSystemADto);
+            attendanceTrackingService.scanBadgeSystemA(badgeSystemADto, badgeNumber);
             return ResponseEntity.ok("Badge scanned successfully for System A");
         } catch (NotFoundInDatabaseException e) {
             return ResponseEntity.status(404).body(e.getMessage());
