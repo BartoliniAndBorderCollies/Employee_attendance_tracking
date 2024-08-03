@@ -2,6 +2,7 @@ package org.klodnicki.rest.controller;
 
 import lombok.AllArgsConstructor;
 import org.klodnicki.dto.badge.BadgeSystemA_DTO;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.service.AttendanceTrackingService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,18 @@ public class AttendanceTrackingController {
         try {
             attendanceTrackingService.scanBadgeSystemA(badgeSystemADto);
             return ResponseEntity.ok("Badge scanned successfully for System A");
+        } catch (NotFoundInDatabaseException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // Endpoint for scanning badge in system B
+    @PostMapping("/systemB/scan")
+    public ResponseEntity<String> scanBadgeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto) {
+
+        try {
+            attendanceTrackingService.scanBadgeSystemB(badgeSystemBDto);
+            return ResponseEntity.ok("Badge scanned successfully for System B");
         } catch (NotFoundInDatabaseException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
