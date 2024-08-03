@@ -83,9 +83,9 @@ public class AttendanceTrackingService {
     }
 
     // method for enter/exit the work - system B
-    public void scanBadgeSystemB(BadgeSystemB_DTO badgeSystemBDto) throws NotFoundInDatabaseException {
+    public void scanBadgeSystemB(BadgeSystemB_DTO badgeSystemBDto, String badgeNumber) throws NotFoundInDatabaseException {
 
-        Badge badge = findByBadgeNumber(badgeSystemBDto.getBadgeNumber());
+        Badge badge = findByBadgeNumber(badgeNumber);
 
         badge.setLocation(badgeSystemBDto.getLocation());
         badge.setDeviceName(badgeSystemBDto.getDeviceName());
