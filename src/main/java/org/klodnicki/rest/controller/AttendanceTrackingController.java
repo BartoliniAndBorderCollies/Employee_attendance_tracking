@@ -41,10 +41,22 @@ public class AttendanceTrackingController {
 
     // Endpoint for assigning badge to Employee in system A
     @PostMapping("/systemA/assign/{employeeId}")
-    public ResponseEntity<String> assignBadgeToEmployeeSystemA (@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable Long employeeId) {
+    public ResponseEntity<String> assignBadgeToEmployeeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable Long employeeId) {
         try {
             attendanceTrackingService.assignBadgeToEmployeeSystemA(badgeSystemADto, employeeId);
             return ResponseEntity.ok("Badge assigned successfully for System A");
+        } catch (NotFoundInDatabaseException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    //Endpoint for assigning badge to Employee in system B
+    @PostMapping("/systemB/assign/{employeeId}")
+    public ResponseEntity<String> assignBadgeToEmployeeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto, @PathVariable Long employeeId) {
+
+        try {
+            attendanceTrackingService.assignBadgeToEmployeeSystemB(badgeSystemBDto, employeeId);
+            return ResponseEntity.ok("Badge assigned successfully for System B");
         } catch (NotFoundInDatabaseException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
