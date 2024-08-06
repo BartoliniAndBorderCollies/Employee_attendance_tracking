@@ -71,10 +71,16 @@ public class AttendanceTrackingService {
 
         Badge badge = findByBadgeNumber(badgeNumber);
 
-        badge.setLocation(badgeSystemADto.getLocation());
-        badge.setDeviceName(badgeSystemADto.getDeviceName());
+        BadgeScanHistory badgeScanHistory = new BadgeScanHistory();
 
-        badgeRepository.save(badge);
+        badgeScanHistory.setBadge(badge);
+        badgeScanHistory.setLocation(badgeSystemADto.getLocation());
+        badgeScanHistory.setDeviceName(badgeSystemADto.getDeviceName());
+
+        Employee employee = badge.getEmployee();
+        badgeScanHistory.setEmployee(employee);
+
+        badgeScanHistoryRepository.save(badgeScanHistory);
     }
 
     // method for enter/exit the work - system B
