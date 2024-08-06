@@ -27,6 +27,7 @@ public class BadgeScanHistory {
     private String location;
     private String deviceName;
     private LocalDateTime timeStamp;
+    @Enumerated(EnumType.STRING)
     private Action action;
 
     @ManyToOne
