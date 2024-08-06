@@ -2,6 +2,7 @@ package org.klodnicki.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.dto.ResponseDTO;
@@ -52,7 +53,7 @@ class EmployeeServiceTest {
         employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
                 new Salary(100.00), LocalDate.of(1957, 12, 10), Gender.FEMALE, new Address(),
                 "telephone 123443", "bank account 321", "nip123321",
-                LocalDate.of(1998, 10, 11));
+                LocalDate.of(1998, 10, 11), new BadgeSystemB_DTO());
     }
 
     @Test
