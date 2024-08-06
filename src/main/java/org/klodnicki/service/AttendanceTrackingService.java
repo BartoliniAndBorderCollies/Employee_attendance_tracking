@@ -61,14 +61,9 @@ public class AttendanceTrackingService {
         return badgeRepository.findByBadgeNumber(badgeNumber).orElseThrow(() -> new NotFoundInDatabaseException(Badge.class));
     }
 
-    private Action determineAction(String badgeNumber) throws NotFoundInDatabaseException {
-        Badge badge = findByBadgeNumber(badgeNumber);
-
-        if (badge.getAction() == null || badge.getAction() == Action.CLOCK_OUT) {
-            return Action.CLOCK_IN;
-        } else {
-            return Action.CLOCK_OUT;
-        }
+    private Action determineAction(Badge badge) {
+        BadgeScanHistory lastScan = badgeScanHistoryRepository.findFirstByBadgeOrderByTimeStampDesc(badge).orElse(null);
+        return (lastScan == null || lastScan.getAction() == Action.CLOCK_IN) ? Action.CLOCK_OUT : Action.CLOCK_IN;
     }
 
     // method for enter/exit the work - system A
