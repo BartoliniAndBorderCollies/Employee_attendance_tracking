@@ -7,8 +7,10 @@ import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Action;
 import org.klodnicki.model.entity.Badge;
+import org.klodnicki.model.entity.BadgeScanHistory;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.BadgeRepository;
+import org.klodnicki.repository.BadgeScanHistoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 public class AttendanceTrackingService {
 
     private final BadgeRepository badgeRepository;
+    private final BadgeScanHistoryRepository badgeScanHistoryRepository;
     private final EmployeeService employeeService;
     private final ModelMapper modelMapper;
 
@@ -88,12 +91,17 @@ public class AttendanceTrackingService {
 
         Badge badge = findByBadgeNumber(badgeNumber);
 
-        badge.setLocation(badgeSystemBDto.getLocation());
-        badge.setDeviceName(badgeSystemBDto.getDeviceName());
-        badge.setAction(determineAction(badge.getBadgeNumber()));
-        badge.setTimeStamp(LocalDateTime.now());
+        BadgeScanHistory badgeScanHistory = new BadgeScanHistory();
 
-        badgeRepository.save(badge);
+        badgeScanHistory.setBadge(badge);
+        badgeScanHistory.setLocation(badgeSystemBDto.getLocation());
+        badgeScanHistory.setDeviceName(badgeSystemBDto.getDeviceName());
+        badgeScanHistory.setAction(determineAction(badge));
+        badgeScanHistory.setTimeStamp(LocalDateTime.now());
+        Employee employee = badge.getEmployee();
+        badgeScanHistory.setEmployee(employee);
+
+        badgeScanHistoryRepository.save(badgeScanHistory);
     }
 
 
