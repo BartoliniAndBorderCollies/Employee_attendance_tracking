@@ -45,6 +45,9 @@ class EmployeeControllerIntegrationTest {
     private Employee employee0;
     private static final String URI_MAIN_PATH = "/api/v1/employees";
     private static final String URI_FIND_BY_NAME = "?lastName=";
+    @Autowired
+    private BadgeRepository badgeRepository;
+    private Badge badge;
 
     @BeforeEach
     void prepareAndSaveInstancesToDatabase() {
@@ -52,14 +55,21 @@ class EmployeeControllerIntegrationTest {
         employee0 = new Employee("firstName", "LastName", "test@test.pl",
                 Department.DEPARTMENT3, new Salary(1000.00), "Gdańsk", LocalDate.of(1991, 2, 21),
                 Gender.MALE, new Address(),"123456789", "11-04-0000-1111-2345-2345",
-                "Pesel 123453423234", LocalDate.of(2024, 7, 10));
+                "Pesel 123453423234", LocalDate.of(2024, 7, 10), null);
 
         employeeRepository.save(employee0);
+    }
+
+    @BeforeEach
+    void prepareAndSaveBadge() {
+        badge = new Badge(null, "badge 123", "Hall test", "device test name", null, LocalDateTime.now(), employee0);
+        badgeRepository.save(badge);
     }
 
     @AfterEach
     public void cleanDatabase() {
         employeeRepository.deleteAll();
+        badgeRepository.deleteAll();
     }
 
     @Test
