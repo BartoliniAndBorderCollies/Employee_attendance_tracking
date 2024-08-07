@@ -13,6 +13,7 @@ import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Badge;
 import org.klodnicki.model.entity.Employee;
+import org.klodnicki.repository.BadgeRepository;
 import org.klodnicki.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,8 +79,8 @@ class EmployeeControllerIntegrationTest {
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("firstName", "lastName",
                 "email@test.pl", Department.DEPARTMENT1, new Salary(100.00), LocalDate.of(1999, 1,1),
-                Gender.FEMALE, new Address(), "123telephone", "123bankAccount",
-                "StringOrPesel", LocalDate.of(2022, 2,1));
+                Gender.FEMALE, new Address("street", "house nr", "11-015", "City", "Norway"), "123telephone", "123bankAccount",
+                "StringOrPesel", LocalDate.of(2022, 2,1), null);
 
         webTestClient.post()
                 .uri(URI_MAIN_PATH)
@@ -100,6 +102,14 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
                     assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
                     assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    assertEquals(employeeDTORequest.getBirthDate(), employee.getBirthDate());
+                    assertEquals(employeeDTORequest.getGender(), employee.getGender());
+                    assertEquals(employeeDTORequest.getAddress(), employee.getAddress());
+                    assertEquals(employeeDTORequest.getTelephoneNumber(), employee.getTelephoneNumber());
+                    assertEquals(employeeDTORequest.getBankAccountNumber(), employee.getBankAccountNumber());
+                    assertEquals(employeeDTORequest.getPeselOrNip(), employee.getPeselOrNip());
+                    assertEquals(employeeDTORequest.getDateOfEmployment(), employee.getDateOfEmployment());
+                    assertNull(employee.getBadge());
                 });
     }
 
