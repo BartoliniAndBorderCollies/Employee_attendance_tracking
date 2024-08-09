@@ -131,6 +131,14 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employee0.getEmail(), actualResponse.getEmail());
                     assertEquals(employee0.getDepartment(), actualResponse.getDepartment());
                     assertEquals(employee0.getSalary(), actualResponse.getSalary());
+                    assertEquals(employee0.getBirthPlace(), actualResponse.getBirthPlace());
+                    assertEquals(employee0.getGender(), actualResponse.getGender());
+                    assertEquals(employee0.getAddress(), actualResponse.getAddress());
+                    assertEquals(employee0.getTelephoneNumber(), actualResponse.getTelephoneNumber());
+                    assertEquals(employee0.getBankAccountNumber(), actualResponse.getBankAccountNumber());
+                    assertEquals(employee0.getPeselOrNip(), actualResponse.getPeselOrNip());
+                    assertEquals(employee0.getDateOfEmployment(), actualResponse.getDateOfEmployment());
+                    assertNull(employee0.getBadge());
                 });
     }
 
