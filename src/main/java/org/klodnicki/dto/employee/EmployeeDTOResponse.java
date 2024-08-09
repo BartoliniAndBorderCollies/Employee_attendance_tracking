@@ -22,6 +22,7 @@ public class EmployeeDTOResponse {
     private String email;
     private Department department;
     private Salary salary;
+    private String birthPlace;
     private LocalDate birthDate;
     private Gender gender;
     private Address address;
