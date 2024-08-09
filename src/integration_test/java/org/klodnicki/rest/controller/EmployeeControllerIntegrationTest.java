@@ -56,7 +56,7 @@ class EmployeeControllerIntegrationTest {
         // Save an employee to the database before each test
         employee0 = new Employee("firstName", "LastName", "test@test.pl",
                 Department.DEPARTMENT3, new Salary(1000.00), "Gdańsk", LocalDate.of(1991, 2, 21),
-                Gender.MALE, new Address(),"123456789", "11-04-0000-1111-2345-2345",
+                Gender.MALE, new Address("test street", "test houseNumber", "11015", "test city", "test country"), "123456789", "11-04-0000-1111-2345-2345",
                 "Pesel 123453423234", LocalDate.of(2024, 7, 10), null);
 
         employeeRepository.save(employee0);
