@@ -145,16 +145,17 @@ class EmployeeControllerIntegrationTest {
 
     @Test
     public void update_ShouldUpdateEmployeeOnDatabase_WhenEmployeeDTORequestAndIdAreGiven() {
-        Employee employeeToBeUpdated = new Employee("firstName", "LastName", "update@update.pl",
-                Department.DEPARTMENT3, new Salary(1000.00), "Warszawa updated", LocalDate.of(1900,1,1),
+        Employee employeeToBeUpdated = new Employee("firstName", "LastName", "test2@test.pl",
+                Department.DEPARTMENT3, new Salary(1000.00), "Warszawa", LocalDate.of(1900, 1, 1),
                 Gender.FEMALE, new Address(), "11111111111", "bank account number",
-                "NIP 789-111-111-12", LocalDate.of(2024,7,19));
+                "NIP 789-111-111-12", LocalDate.of(2024, 7, 19), null);
         employeeRepository.save(employeeToBeUpdated);
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("updatedFirstName", "updatedLastName",
-                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00),
-                LocalDate.of(1983, 9, 12), Gender.FEMALE, new Address(), "updated phone",
-                "updated bank account", "updated pesel", LocalDate.of(1922, 3,3));
+                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00), "Updated birth place",
+                LocalDate.of(1983, 9, 12), Gender.FEMALE, new Address("Street", "12",
+                "11-015", "Poznan", "Poland"), "updated phone","updated bank account",
+                "updated pesel", LocalDate.of(1922, 3, 3), null);
 
         webTestClient.put()
                 .uri(URI_MAIN_PATH + "/" + employeeToBeUpdated.getId())
@@ -175,6 +176,16 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
                     assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
                     assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    assertEquals(employeeDTORequest.getBirthDate(), employee.getBirthDate());
+                    assertEquals(employeeDTORequest.getBirthPlace(), employee.getBirthPlace());
+                    assertEquals(employeeDTORequest.getGender(), employee.getGender());
+                    assertEquals(employeeDTORequest.getAddress(), employee.getAddress());
+                    assertEquals(employeeDTORequest.getTelephoneNumber(), employee.getTelephoneNumber());
+                    assertEquals(employeeDTORequest.getBankAccountNumber(), employee.getBankAccountNumber());
+                    assertEquals(employeeDTORequest.getPeselOrNip(), employee.getPeselOrNip());
+                    assertEquals(employeeDTORequest.getDateOfEmployment(), employee.getDateOfEmployment());
+                    assertNull(employeeDTORequest.getBadge());
+
                 });
     }
 
