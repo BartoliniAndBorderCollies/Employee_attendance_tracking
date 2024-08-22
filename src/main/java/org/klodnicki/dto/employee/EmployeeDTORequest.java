@@ -32,6 +32,7 @@ public class EmployeeDTORequest {
     private Department department;
     @NotNull(message = "Salary must be given!")
     private Salary salary;
+    private String birthPlace;
     private LocalDate birthDate;
     private Gender gender;
     private Address address;
