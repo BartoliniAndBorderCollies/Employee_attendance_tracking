@@ -78,6 +78,14 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         Optional.ofNullable(employeeDTORequest.getEmail()).ifPresent(employeeToBeUpdated::setEmail);
         Optional.ofNullable(employeeDTORequest.getDepartment()).ifPresent(employeeToBeUpdated::setDepartment);
         Optional.ofNullable(employeeDTORequest.getSalary()).ifPresent(employeeToBeUpdated::setSalary);
+        Optional.ofNullable(employeeDTORequest.getBirthDate()).ifPresent(employeeToBeUpdated::setBirthDate);
+        Optional.ofNullable(employeeDTORequest.getBirthPlace()).ifPresent(employeeToBeUpdated::setBirthPlace);
+        Optional.ofNullable(employeeDTORequest.getGender()).ifPresent(employeeToBeUpdated::setGender);
+        Optional.ofNullable(employeeDTORequest.getAddress()).ifPresent(employeeToBeUpdated::setAddress);
+        Optional.ofNullable(employeeDTORequest.getTelephoneNumber()).ifPresent(employeeToBeUpdated::setTelephoneNumber);
+        Optional.ofNullable(employeeDTORequest.getBankAccountNumber()).ifPresent(employeeToBeUpdated::setBankAccountNumber);
+        Optional.ofNullable(employeeDTORequest.getPeselOrNip()).ifPresent(employeeToBeUpdated::setPeselOrNip);
+        Optional.ofNullable(employeeDTORequest.getDateOfEmployment()).ifPresent(employeeToBeUpdated::setDateOfEmployment);
 
         employeeRepository.save(employeeToBeUpdated);
 
