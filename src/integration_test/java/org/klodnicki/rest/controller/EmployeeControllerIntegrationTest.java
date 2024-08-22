@@ -78,9 +78,9 @@ class EmployeeControllerIntegrationTest {
     public void create_ShouldAddEmployeeToDatabaseAndReturnEmployeeDTOResponse_WhenEmployeeDTORequestIsGiven() {
 
         EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("firstName", "lastName",
-                "email@test.pl", Department.DEPARTMENT1, new Salary(100.00), LocalDate.of(1999, 1,1),
+                "email@test.pl", Department.DEPARTMENT1, new Salary(100.00), "Warsaw", LocalDate.of(1999, 1, 1),
                 Gender.FEMALE, new Address("street", "house nr", "11-015", "City", "Norway"), "123telephone", "123bankAccount",
-                "StringOrPesel", LocalDate.of(2022, 2,1), null);
+                "StringOrPesel", LocalDate.of(2022, 2, 1), null);
 
         webTestClient.post()
                 .uri(URI_MAIN_PATH)
@@ -102,6 +102,7 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
                     assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
                     assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    assertEquals(employeeDTORequest.getBirthPlace(), employee.getBirthPlace());
                     assertEquals(employeeDTORequest.getBirthDate(), employee.getBirthDate());
                     assertEquals(employeeDTORequest.getGender(), employee.getGender());
                     assertEquals(employeeDTORequest.getAddress(), employee.getAddress());
