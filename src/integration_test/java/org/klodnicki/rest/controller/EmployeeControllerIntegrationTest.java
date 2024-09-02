@@ -237,7 +237,8 @@ class EmployeeControllerIntegrationTest {
                     "123456789",
                     "11-22-3333-4444-5555",
                     "Pesel 12345678901",
-                    LocalDate.of(2015, 1, 10)
+                    LocalDate.of(2015, 1, 10),
+                    null
             );
 
             employee2 = new Employee(
@@ -253,7 +254,8 @@ class EmployeeControllerIntegrationTest {
                     "987654321",
                     "22-33-4444-5555-6666",
                     "Pesel 23456789012",
-                    LocalDate.of(2018, 3, 5)
+                    LocalDate.of(2018, 3, 5),
+                    null
             );
 
             employee3 = new Employee(
@@ -269,7 +271,8 @@ class EmployeeControllerIntegrationTest {
                     "1122334455",
                     "33-44-5555-6666-7777",
                     "Pesel 34567890123",
-                    LocalDate.of(2020, 5, 20)
+                    LocalDate.of(2020, 5, 20),
+                    null
             );
 
             employee4 = new Employee(
@@ -285,7 +288,8 @@ class EmployeeControllerIntegrationTest {
                     "5566778899",
                     "44-55-6666-7777-8888",
                     "Pesel 45678901234",
-                    LocalDate.of(2017, 9, 25)
+                    LocalDate.of(2017, 9, 25),
+                    null
             );
 
             employees = employeeRepository.saveAll(Arrays.asList(employee1, employee2, employee3, employee4));
