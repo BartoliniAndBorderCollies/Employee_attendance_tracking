@@ -2,6 +2,7 @@ package org.klodnicki.service;
 
 import org.junit.jupiter.api.Test;
 import org.klodnicki.dto.badge.BadgeSystemA_DTO;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.entity.Badge;
@@ -44,6 +45,26 @@ class AttendanceTrackingServiceTest {
 
         //Act
         attendanceTrackingService.assignBadgeToEmployeeSystemA(badgeSystemADto, employeeId);
+
+        //Assert
+        //Verify
+        verify(modelMapper).map(employeeDTOResponse, Employee.class);
+        verify(employeeService).findById(employeeId);
+        verify(badgeRepository).save(any(Badge.class));
+    }
+
+    @Test
+    public void assignBadgeToEmployeeSystemB_ShouldSetVariablesMapAndSave_WhenEmployeeIdAndBadgeDTOBAreGiven()
+            throws NotFoundInDatabaseException {
+
+        //Arrange
+        BadgeSystemB_DTO badgeSystemBDto = mock(BadgeSystemB_DTO.class);
+
+        when(employeeService.findById(employeeId)).thenReturn(employeeDTOResponse);
+        when(modelMapper.map(employeeDTOResponse, Employee.class)).thenReturn(employee);
+
+        //Act
+        attendanceTrackingService.assignBadgeToEmployeeSystemB(badgeSystemBDto, employeeId);
 
         //Assert
         //Verify
