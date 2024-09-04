@@ -28,16 +28,20 @@ class AttendanceTrackingServiceTest {
     private AttendanceTrackingService attendanceTrackingService;
     @Mock
     private BadgeRepository badgeRepository;
+    private Long employeeId = 1L;
+    @Mock
+    EmployeeDTOResponse employeeDTOResponse;
+    @Mock
+    Employee employee = mock(Employee.class);
+
 
     public AttendanceTrackingServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    public void assignBadgeToEmployeeSystemA_ShouldSetVariablesMapAndSave_WhenEmployeeIdAndBadgeDTOAreGiven() throws NotFoundInDatabaseException {
+    public void assignBadgeToEmployeeSystemA_ShouldSetVariablesMapAndSave_WhenEmployeeIdAndBadgeDTOAAreGiven() throws NotFoundInDatabaseException {
+
         //Arrange
-        Long employeeId = 1L;
-        EmployeeDTOResponse employeeDTOResponse = mock(EmployeeDTOResponse.class);
-        Employee employee = mock(Employee.class);
         BadgeSystemA_DTO badgeSystemADto = mock(BadgeSystemA_DTO.class);
 
         when(employeeService.findById(employeeId)).thenReturn(employeeDTOResponse);
