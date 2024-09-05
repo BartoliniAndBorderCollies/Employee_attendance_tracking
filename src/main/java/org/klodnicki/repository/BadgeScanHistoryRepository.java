@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface BadgeScanHistoryRepository extends CrudRepository<BadgeScanHistory, Long> {
 
     Optional<BadgeScanHistory> findFirstByBadgeOrderByTimeStampDesc(Badge badge);
+
+    Optional<BadgeScanHistory> findByBadge(Badge badge);
 }
