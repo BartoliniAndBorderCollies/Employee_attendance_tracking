@@ -48,6 +48,7 @@ public class Employee extends Person {
     private Address address;
     private String telephoneNumber;
     private String bankAccountNumber;
+    @Column(unique = true)
     private String peselOrNip;
     private LocalDate dateOfEmployment;
     @OneToOne(mappedBy = "employee")
