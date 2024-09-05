@@ -1,13 +1,11 @@
 package org.klodnicki.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.klodnicki.model.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -55,4 +53,16 @@ public class Employee extends Person {
     @OneToOne(mappedBy = "employee")
     private Badge badge;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(id, employee.id) && Objects.equals(peselOrNip, employee.peselOrNip);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, peselOrNip);
+    }
 }
