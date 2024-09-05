@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.klodnicki.model.Action;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -30,4 +31,16 @@ public class Badge {
     @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Badge badge = (Badge) o;
+        return Objects.equals(id, badge.id) && Objects.equals(badgeNumber, badge.badgeNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, badgeNumber);
+    }
 }
