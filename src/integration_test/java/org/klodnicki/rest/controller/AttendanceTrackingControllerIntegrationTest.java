@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.klodnicki.dto.badge.BadgeSystemA_DTO;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
+import org.klodnicki.model.Action;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
@@ -20,6 +22,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,12 +38,14 @@ class AttendanceTrackingControllerIntegrationTest {
     private BadgeRepository badgeRepository;
     private Badge badge;
     private BadgeSystemA_DTO badgeSystemADto;
+    private BadgeSystemB_DTO badgeSystemBDto;
     @Autowired
     private BadgeScanHistoryRepository badgeScanHistoryRepository;
     private Employee employee;
     @Autowired
     private EmployeeRepository employeeRepository;
     private static final String URI_MAIN_PATH = "/attendance";
+    private LocalDateTime exactTime = LocalDateTime.of(2024, 9, 6, 10, 10);
 
     @BeforeEach
     public void prepareEnvironment() {
@@ -56,6 +61,10 @@ class AttendanceTrackingControllerIntegrationTest {
         badgeRepository.save(badge);
 
         badgeSystemADto = new BadgeSystemA_DTO("12345", "Location A", "Device A", null);
+
+        badgeSystemBDto = new BadgeSystemB_DTO("12345", "Location B", "Device B",
+                Action.CLOCK_OUT, exactTime, null);
+
     }
 
     @AfterEach
@@ -94,4 +103,36 @@ class AttendanceTrackingControllerIntegrationTest {
                 });
     }
 
+    @Test
+    public void scanBadgeSystemB_ShouldSetVariablesToBadgeAndSaveItInRepoAndReturnResponseEntity_WhenScannedWithDevice() {
+
+        webTestClient.put()
+                .uri(URI_MAIN_PATH + "/systemB/scan/" + badge.getBadgeNumber())
+                .bodyValue(badgeSystemBDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .consumeWith(response -> {
+                    String actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse);
+                    assertEquals("Badge scanned successfully for System B", actualResponse);
+
+                    long badgeScanHistoryCount = badgeScanHistoryRepository.count();
+                    assertEquals(1, badgeScanHistoryCount);
+
+                    Optional<BadgeScanHistory> badgeScanHistory = badgeScanHistoryRepository.findByBadge(badge);
+                    assertTrue(badgeScanHistory.isPresent(), "Badge history not found in database");
+                    BadgeScanHistory existingBadgeHistory = badgeScanHistory.get();
+                    existingBadgeHistory.setTimeStamp(exactTime);
+
+                    assertEquals(existingBadgeHistory.getBadge(), badge);
+                    assertEquals(existingBadgeHistory.getLocation(), badgeSystemBDto.getLocation());
+                    assertEquals(existingBadgeHistory.getDeviceName(), badgeSystemBDto.getDeviceName());
+                    assertEquals(existingBadgeHistory.getEmployee(), badge.getEmployee());
+                    assertEquals(existingBadgeHistory.getAction(), badgeSystemBDto.getAction());
+                    assertEquals(existingBadgeHistory.getTimeStamp(), exactTime);
+                });
+
+
+    }
 }
