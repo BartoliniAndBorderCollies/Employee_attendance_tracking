@@ -1,6 +1,8 @@
 package org.klodnicki.dto.badge;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.model.Action;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BadgeSystemB_DTO {
 
     private String badgeNumber;
