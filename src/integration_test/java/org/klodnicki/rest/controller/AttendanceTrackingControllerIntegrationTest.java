@@ -40,6 +40,7 @@ class AttendanceTrackingControllerIntegrationTest {
     private BadgeSystemA_DTO badgeSystemADto;
     private BadgeSystemA_DTO badgeSystemAADto;
     private BadgeSystemB_DTO badgeSystemBDto;
+    private BadgeSystemB_DTO badgeSystemBBDto;
     @Autowired
     private BadgeScanHistoryRepository badgeScanHistoryRepository;
     private Employee employee;
@@ -69,6 +70,8 @@ class AttendanceTrackingControllerIntegrationTest {
         //to avoid duplicate entry
         badgeSystemAADto = new BadgeSystemA_DTO("98765", "Location A", "Device A", null);
 
+        badgeSystemBBDto = new BadgeSystemB_DTO("98765", "Location B", "Device B",
+                Action.CLOCK_OUT, exactTime, null);
     }
 
     @AfterEach
@@ -140,7 +143,8 @@ class AttendanceTrackingControllerIntegrationTest {
 
     @Test
     public void assignBadgeToEmployeeSystemA_ShouldCreateBadgeSetVariablesSaveAndReturnResponseEntity_WhenBadgeSystemAAndEmployeeIdAreGiven() {
-        Employee employee2 = new Employee("first name2", "last name2", "email2", Department.DEPARTMENT1, new Salary(10000),
+
+       Employee employee2 = new Employee("first name2", "last name2", "email2", Department.DEPARTMENT1, new Salary(10000),
                 "birth place2", LocalDate.of(1983, 5, 1), Gender.MALE, null, "1234567892",
                 "bank account number2", "pesel or nip2", LocalDate.of(2024, 8, 15),
                 null);
@@ -172,6 +176,44 @@ class AttendanceTrackingControllerIntegrationTest {
                     assertEquals(existingBadge.getLocation(), badgeSystemAADto.getLocation());
                     assertEquals(existingBadge.getDeviceName(), badgeSystemAADto.getDeviceName());
                     assertEquals(existingBadge.getEmployee(), employee2);
+                });
+    }
+
+    @Test
+    public void assignBadgeToEmployeeSystemB_ShouldCreateBadgeSetVariablesSaveAndReturnResponseEntity_WhenBadgeSystemBAndEmployeeIdAreGiven() {
+
+        Employee employee3 = new Employee("first name3", "last name3", "email3", Department.DEPARTMENT1, new Salary(10000),
+                "birth place3", LocalDate.of(1983, 5, 1), Gender.MALE, null, "12345678923",
+                "bank account number3", "pesel or nip3", LocalDate.of(2024, 8, 15),
+                null);
+        employeeRepository.save(employee3);
+
+        webTestClient.post()
+                .uri(URI_MAIN_PATH + "/systemB/assign/" + employee3.getId())
+                .bodyValue(badgeSystemBBDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .consumeWith(response -> {
+                    String actualResponse = response.getResponseBody();
+                    assertNotNull(actualResponse);
+                    assertEquals("Badge assigned successfully for System B", actualResponse);
+
+                    //I check if on repo I have TWO records (one from @BeforeEach and one from current method)
+                    long badgeRepositoryCount = badgeRepository.count();
+                    assertEquals(2, badgeRepositoryCount);
+
+                    //find and take the employee
+                    Optional<Employee> optionalEmployee = employeeRepository.findById(employee3.getId());
+                    assertTrue(optionalEmployee.isPresent());
+                    Employee existingEmployee = optionalEmployee.get();
+
+                    Badge existingBadge = existingEmployee.getBadge();
+
+                    assertEquals(existingBadge.getBadgeNumber(), badgeSystemBBDto.getBadgeNumber());
+                    assertEquals(existingBadge.getLocation(), badgeSystemBBDto.getLocation());
+                    assertEquals(existingBadge.getDeviceName(), badgeSystemBBDto.getDeviceName());
+                    assertEquals(existingBadge.getEmployee(), employee3);
                 });
     }
 }
