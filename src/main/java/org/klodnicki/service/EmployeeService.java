@@ -1,5 +1,7 @@
 package org.klodnicki.service;
 
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.AllArgsConstructor;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
@@ -9,10 +11,12 @@ import org.klodnicki.model.Department;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
+import org.klodnicki.util.CSVUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -134,4 +138,14 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         return employeeDTOResponseList;
     }
 
+    public void exportEmployeesToCSV(String fileName) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        List<Employee> employees = new ArrayList<>();
+        employeeRepository.findAll().forEach(employees::add);
+        CSVUtil.exportToCSV(fileName, employees);
+    }
+
+    public void importEmployeesFromCSV(String fileName) throws IOException {
+        List<Employee> employees = CSVUtil.importFromCSV(fileName, Employee.class);
+        employeeRepository.saveAll(employees);
+    }
 }
