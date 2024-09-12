@@ -1,5 +1,7 @@
 package org.klodnicki.rest.controller;
 
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
@@ -8,9 +10,17 @@ import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Department;
 import org.klodnicki.service.EmployeeService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,6 +29,34 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private static final String employeesCSV = "employees.csv";
+
+    @GetMapping("/export")
+    public ResponseEntity<Resource> exportEmployeesToCSV() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+
+        // Export employees to CSV (which will generate the file)
+        employeeService.exportEmployeesToCSV(employeesCSV);
+
+        // Create a resource for the file and set appropriate headers for download
+        File file = new File(employeesCSV);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        // Set the headers for the CSV download
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(resource);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<String> importEmployeesFromCSV() {
+        try {
+            employeeService.importEmployeesFromCSV(employeesCSV);
+            return ResponseEntity.ok("Employee data imported successfully!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error importing employee data.");
+        }
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,5 +117,6 @@ public class EmployeeController {
     public List<EmployeeDTOResponse> findByDepartment (@RequestParam("department") Department department) {
         return employeeService.findByDepartment(department);
     }
+
 }
 
