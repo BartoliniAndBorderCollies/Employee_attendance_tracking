@@ -1,5 +1,6 @@
 package org.klodnicki.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Badge {
     private LocalDateTime timeStamp;
     @OneToOne
     @JoinColumn(name = "employee_id", unique = true)
+    @JsonBackReference  // Child side of the relationship
     private Employee employee;
 
     @Override
