@@ -1,5 +1,6 @@
 package org.klodnicki.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.klodnicki.model.*;
@@ -52,6 +53,7 @@ public class Employee extends Person {
     private String peselOrNip;
     private LocalDate dateOfEmployment;
     @OneToOne(mappedBy = "employee")
+    @JsonManagedReference //child side of the relationship
     private Badge badge;
 
     @Override
