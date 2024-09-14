@@ -2,6 +2,7 @@ package org.klodnicki.service;
 
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
@@ -29,6 +30,12 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
+
+    // Initialize the custom mapping
+    @PostConstruct
+    public void init() {
+        modelMapper.addMappings(new EmployeeToEmployeeDTOMapping());
+    }
 
     public void exportEmployeesToCSV(String fileName) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         List<Employee> employees = new ArrayList<>();
