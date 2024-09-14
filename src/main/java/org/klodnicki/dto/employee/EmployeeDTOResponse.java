@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.klodnicki.dto.badge.BadgeSystemA_DTO;
-import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
-import org.klodnicki.model.Salary;
 
 import java.time.LocalDate;
 
@@ -21,11 +19,18 @@ public class EmployeeDTOResponse {
     private String lastName;
     private String email;
     private Department department;
-    private Salary salary;
+    private double salaryAmount;  // Flattened Salary field
     private String birthPlace;
     private LocalDate birthDate;
     private Gender gender;
-    private Address address;
+
+    // Flattened Address fields
+    private String street;
+    private String houseNumber;
+    private String postalCode;
+    private String city;
+    private String country;
+
     private String telephoneNumber;
     private String bankAccountNumber;
     private String peselOrNip;
