@@ -14,6 +14,7 @@ import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
 import org.klodnicki.util.CSVUtil;
 import org.klodnicki.util.EmployeeCSVMappingStrategy;
+import org.klodnicki.util.EmployeeToEmployeeDTOMapping;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -38,9 +40,12 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     public void exportEmployeesToCSV(String fileName) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
-        List<Employee> employees = new ArrayList<>();
-        employeeRepository.findAll().forEach(employees::add);
-        CSVUtil.exportToCSV(fileName, employees, new EmployeeCSVMappingStrategy());
+        List<EmployeeDTOResponse> employeeDTOs = StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
+                .map(employee -> modelMapper.map(employee, EmployeeDTOResponse.class))
+                .collect(Collectors.toList());
+
+        // Export to CSV using the mapping strategy
+        CSVUtil.exportToCSV(fileName, employeeDTOs, new EmployeeCSVMappingStrategy());
     }
 
     public void importEmployeesFromCSV(String fileName) throws IOException {
