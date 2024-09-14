@@ -1,20 +1,21 @@
 package org.klodnicki.util;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
-import org.klodnicki.model.entity.Employee;
+import org.klodnicki.dto.employee.EmployeeDTOResponse;
 
-public class EmployeeCSVMappingStrategy extends ColumnPositionMappingStrategy<Employee> {
+public class EmployeeCSVMappingStrategy extends ColumnPositionMappingStrategy<EmployeeDTOResponse> {
 
     public EmployeeCSVMappingStrategy() {
-        this.setType(Employee.class);
+        this.setType(EmployeeDTOResponse.class);
 
+        // Map columns including the flattened fields
         this.setColumnMapping(
-                "first_name", "last_name", "email",
-                "address.street", "address.house_number", "address.postal_code", "address.city", "address.country",
-                "badge.badge_number", "bank_account_number", "birth_date", "birth_place",
-                "date_of_employment", "department", "gender", "id", "last_name", "pesel_or_nip", "salary_amount",
-                "telephone_number"
+                "firstName", "lastName", "email",  // From Person class
+                "street", "houseNumber", "postalCode", "city", "country",  // Flattened Address fields
+                "bankAccountNumber", "birthDate", "birthPlace",
+                "dateOfEmployment", "department", "gender", "id", "peselOrNip",
+                "salaryAmount",  // Flattened Salary amount
+                "telephoneNumber"
         );
     }
 }
-
