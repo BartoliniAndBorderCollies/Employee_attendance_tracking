@@ -29,29 +29,37 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private static final String employeesCSV = "employees.csv";
+    private static final String EMPLOYEES_CSV = "employees.csv";
 
     @GetMapping("/export")
     public ResponseEntity<Resource> exportEmployeesToCSV() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
 
-        // Export employees to CSV (which will generate the file)
-        employeeService.exportEmployeesToCSV(employeesCSV);
+        // Export employees to CSV
+        employeeService.exportEmployeesToCSV(EMPLOYEES_CSV);
 
-        // Create a resource for the file and set appropriate headers for download
-        File file = new File(employeesCSV);
+        File file = new File(EMPLOYEES_CSV);
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Create resource for download
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
-        // Set the headers for the CSV download
-        return ResponseEntity.ok()
+        ResponseEntity<Resource> response = ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(resource);
+
+        // Delete the file after sending the response
+        file.delete();
+
+        return response;
     }
 
     @PostMapping("/import")
     public ResponseEntity<String> importEmployeesFromCSV() {
         try {
-            employeeService.importEmployeesFromCSV(employeesCSV);
+            employeeService.importEmployeesFromCSV(EMPLOYEES_CSV);
             return ResponseEntity.ok("Employee data imported successfully!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error importing employee data.");
