@@ -51,7 +51,12 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     }
 
     public void importEmployeesFromCSV(String fileName) throws IOException {
-        List<Employee> employees = CSVUtil.importFromCSV(fileName, Employee.class);
+        List<EmployeeDTORequest> employeeDTOs = CSVUtil.importFromCSV(fileName, EmployeeDTORequest.class);
+
+        List<Employee> employees = employeeDTOs.stream()
+                .map(dto -> modelMapper.map(dto, Employee.class))
+                .collect(Collectors.toList());
+
         employeeRepository.saveAll(employees);
     }
 
