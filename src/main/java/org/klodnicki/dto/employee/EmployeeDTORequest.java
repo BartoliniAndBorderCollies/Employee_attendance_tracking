@@ -8,10 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.klodnicki.dto.badge.BadgeSystemB_DTO;
-import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
-import org.klodnicki.model.Salary;
 
 import java.time.LocalDate;
 
@@ -31,11 +29,16 @@ public class EmployeeDTORequest {
     @NotNull(message = "Departament must be chosen!")
     private Department department;
     @NotNull(message = "Salary must be given!")
-    private Salary salary;
+    private double salaryAmount;  // Flattened Salary field
     private String birthPlace;
     private LocalDate birthDate;
     private Gender gender;
-    private Address address;
+    // Flattened Address fields
+    private String street;
+    private String houseNumber;
+    private String postalCode;
+    private String city;
+    private String country;
     private String telephoneNumber;
     private String bankAccountNumber;
     private String peselOrNip;
