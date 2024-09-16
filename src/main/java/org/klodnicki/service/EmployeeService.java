@@ -8,7 +8,9 @@ import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
+import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
+import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
@@ -106,21 +108,41 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
      */
     @Override
     public EmployeeDTOResponse update(Long id, EmployeeDTORequest employeeDTORequest) throws NotFoundInDatabaseException {
-        Employee employeeToBeUpdated = employeeRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
+        Employee employeeToBeUpdated = employeeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundInDatabaseException(Employee.class));
 
+        // Updating basic fields
         Optional.ofNullable(employeeDTORequest.getFirstName()).ifPresent(employeeToBeUpdated::setFirstName);
         Optional.ofNullable(employeeDTORequest.getLastName()).ifPresent(employeeToBeUpdated::setLastName);
         Optional.ofNullable(employeeDTORequest.getEmail()).ifPresent(employeeToBeUpdated::setEmail);
         Optional.ofNullable(employeeDTORequest.getDepartment()).ifPresent(employeeToBeUpdated::setDepartment);
-        Optional.ofNullable(employeeDTORequest.getSalary()).ifPresent(employeeToBeUpdated::setSalary);
         Optional.ofNullable(employeeDTORequest.getBirthDate()).ifPresent(employeeToBeUpdated::setBirthDate);
         Optional.ofNullable(employeeDTORequest.getBirthPlace()).ifPresent(employeeToBeUpdated::setBirthPlace);
         Optional.ofNullable(employeeDTORequest.getGender()).ifPresent(employeeToBeUpdated::setGender);
-        Optional.ofNullable(employeeDTORequest.getAddress()).ifPresent(employeeToBeUpdated::setAddress);
         Optional.ofNullable(employeeDTORequest.getTelephoneNumber()).ifPresent(employeeToBeUpdated::setTelephoneNumber);
         Optional.ofNullable(employeeDTORequest.getBankAccountNumber()).ifPresent(employeeToBeUpdated::setBankAccountNumber);
         Optional.ofNullable(employeeDTORequest.getPeselOrNip()).ifPresent(employeeToBeUpdated::setPeselOrNip);
         Optional.ofNullable(employeeDTORequest.getDateOfEmployment()).ifPresent(employeeToBeUpdated::setDateOfEmployment);
+
+        // Update Salary (embedded class)
+        Optional.of(employeeDTORequest.getSalaryAmount()).ifPresent(salaryAmount -> {
+            if (employeeToBeUpdated.getSalary() == null) {
+                employeeToBeUpdated.setSalary(new Salary());
+            }
+            employeeToBeUpdated.getSalary().setAmount(salaryAmount);
+        });
+
+        // Update Address (embedded class)
+        Optional.ofNullable(employeeDTORequest.getStreet()).ifPresent(street -> {
+            if (employeeToBeUpdated.getAddress() == null) {
+                employeeToBeUpdated.setAddress(new Address());
+            }
+            employeeToBeUpdated.getAddress().setStreet(street);
+            Optional.ofNullable(employeeDTORequest.getHouseNumber()).ifPresent(employeeToBeUpdated.getAddress()::setHouseNumber);
+            Optional.ofNullable(employeeDTORequest.getPostalCode()).ifPresent(employeeToBeUpdated.getAddress()::setPostalCode);
+            Optional.ofNullable(employeeDTORequest.getCity()).ifPresent(employeeToBeUpdated.getAddress()::setCity);
+            Optional.ofNullable(employeeDTORequest.getCountry()).ifPresent(employeeToBeUpdated.getAddress()::setCountry);
+        });
 
         employeeRepository.save(employeeToBeUpdated);
 
