@@ -14,6 +14,7 @@ import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
 import org.klodnicki.util.CSVUtil;
 import org.klodnicki.util.EmployeeCSVMappingStrategy;
+import org.klodnicki.util.EmployeeDTOToEmployeeMapping;
 import org.klodnicki.util.EmployeeToEmployeeDTOMapping;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     @PostConstruct
     public void init() {
         modelMapper.addMappings(new EmployeeToEmployeeDTOMapping());
+        modelMapper.addMappings(new EmployeeDTOToEmployeeMapping());
     }
 
     public void exportEmployeesToCSV(String fileName) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
