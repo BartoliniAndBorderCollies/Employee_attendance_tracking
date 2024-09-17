@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,13 +58,18 @@ public class EmployeeController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<String> importEmployeesFromCSV() {
+    public ResponseEntity<String> importEmployeesFromCSV(@RequestParam("import") MultipartFile file) {
         try {
-            employeeService.importEmployeesFromCSV(EMPLOYEES_CSV);
-            return ResponseEntity.ok("Employee data imported successfully!");
+            int amountBefore = employeeService.checkRecordsAmount();
+            employeeService.importEmployeesFromCSV(file);
+            int checkAfter = employeeService.checkRecordsAmount();
+
+            if (amountBefore == checkAfter)
+                return ResponseEntity.ok("Something went wrong! nothing was added to database");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error importing employee data.");
         }
+        return ResponseEntity.ok("New data has been added!");
     }
 
     @PostMapping
@@ -100,7 +106,7 @@ public class EmployeeController {
      * @return A list of employees matching the given last name.
      */
     @GetMapping(params = "lastName")
-    public List<EmployeeDTOResponse> findByName (@RequestParam("lastName") String lastName) {
+    public List<EmployeeDTOResponse> findByName(@RequestParam("lastName") String lastName) {
         return employeeService.findByName(lastName);
     }
 
@@ -108,13 +114,14 @@ public class EmployeeController {
      * Finds employees within a specified salary range.
      *
      * @param from The minimum salary.
-     * @param to The maximum salary.
+     * @param to   The maximum salary.
      * @return A list of employees whose salaries fall within the specified range.
      */
     @GetMapping("/salary")
     public List<EmployeeDTOResponse> findBySalaryRange(@RequestParam("from") double from, @RequestParam("to") double to) {
         return employeeService.findBySalaryRange(from, to);
     }
+
     /**
      * Finds employees by their department.
      *
@@ -122,7 +129,7 @@ public class EmployeeController {
      * @return A list of employees belonging to the specified department.
      */
     @GetMapping(params = "department")
-    public List<EmployeeDTOResponse> findByDepartment (@RequestParam("department") Department department) {
+    public List<EmployeeDTOResponse> findByDepartment(@RequestParam("department") Department department) {
         return employeeService.findByDepartment(department);
     }
 
