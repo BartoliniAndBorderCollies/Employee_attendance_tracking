@@ -14,13 +14,11 @@ import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
-import org.klodnicki.util.CSVUtil;
-import org.klodnicki.util.EmployeeCSVMappingStrategy;
-import org.klodnicki.util.EmployeeDTOToEmployeeMapping;
-import org.klodnicki.util.EmployeeToEmployeeDTOMapping;
+import org.klodnicki.util.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,14 +50,23 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         CSVUtil.exportToCSV(fileName, employeeDTOs, new EmployeeCSVMappingStrategy());
     }
 
-    public void importEmployeesFromCSV(String fileName) throws IOException {
-        List<EmployeeDTORequest> employeeDTOs = CSVUtil.importFromCSV(fileName, EmployeeDTORequest.class);
+    public void importEmployeesFromCSV(MultipartFile file) throws IOException {
+        // Create mapping strategy
+        EmployeeImportMappingStrategy strategy = new EmployeeImportMappingStrategy();
+
+        // Use InputStream from MultipartFile for CSV import
+        List<EmployeeDTORequest> employeeDTOs = CSVUtil.importFromCSV(file.getInputStream(), EmployeeDTORequest.class, strategy);
 
         List<Employee> employees = employeeDTOs.stream()
                 .map(dto -> modelMapper.map(dto, Employee.class))
                 .collect(Collectors.toList());
 
         employeeRepository.saveAll(employees);
+    }
+
+
+    public int checkRecordsAmount() {
+        return (int) employeeRepository.count();
     }
 
     @Override
