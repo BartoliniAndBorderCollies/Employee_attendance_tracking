@@ -20,9 +20,10 @@ public class CSVUtil {
         }
     }
 
-    public static <T> List<T> importFromCSV(String fileName, Class<T> clazz) throws IOException {
-        try (Reader reader = new FileReader(fileName)) {
+    public static <T> List<T> importFromCSV(InputStream inputStream, Class<T> clazz, MappingStrategy<T> strategy) throws IOException {
+        try (Reader reader = new InputStreamReader(inputStream)) {
             CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader)
+                    .withMappingStrategy(strategy)
                     .withType(clazz)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
