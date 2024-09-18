@@ -12,10 +12,15 @@ public class CSVUtil {
     //this method will work with any type <T>, for example: List<Employee> T would be Employee, List<Badge> T would be Badge
     public static <T> void exportToCSV(String fileName, List<T> list, ColumnPositionMappingStrategy<T> strategy)
             throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+
         try (FileWriter writer = new FileWriter(fileName)) {
+            // Enable writing data with a semicolon as the separator
             StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
                     .withMappingStrategy(strategy)
+                    .withSeparator(';')  // Use semicolon as the separator so that I have data in separate columns
                     .build();
+
+            // Write data, StatefulBeanToCsv will handle headers automatically
             beanToCsv.write(list);
         }
     }
