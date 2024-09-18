@@ -18,4 +18,17 @@ public class EmployeeCSVMappingStrategy extends ColumnPositionMappingStrategy<Em
                 "telephoneNumber"
         );
     }
+
+    // Override generateHeader to return column names
+    @Override
+    public String[] generateHeader(EmployeeDTOResponse bean) {
+        return new String[]{
+                "First Name", "Last Name", "Email",
+                "Street", "House Number", "Postal Code", "City", "Country",
+                "Bank Account Number", "Birth Date", "Birth Place",
+                "Date of Employment", "Department", "Gender", "ID", "PESEL/NIP",
+                "Salary Amount",
+                "Telephone Number"
+        };
+    }
 }
