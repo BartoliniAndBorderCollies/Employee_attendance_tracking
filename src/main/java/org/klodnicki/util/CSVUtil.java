@@ -31,6 +31,7 @@ public class CSVUtil {
                     .withMappingStrategy(strategy)
                     .withType(clazz)
                     .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(';')
                     .build();
             return csvToBean.parse();
         }
