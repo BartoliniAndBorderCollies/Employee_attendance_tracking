@@ -64,11 +64,6 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         employeeRepository.saveAll(employees);
     }
 
-
-    public int checkRecordsAmount() {
-        return (int) employeeRepository.count();
-    }
-
     @Override
     public EmployeeDTOResponse create(EmployeeDTORequest employeeDTO) {
         if (employeeDTO.getEmail() == null && employeeDTO.getTelephoneNumber() == null) {
