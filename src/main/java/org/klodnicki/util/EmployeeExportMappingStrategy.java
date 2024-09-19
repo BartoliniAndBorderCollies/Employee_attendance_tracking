@@ -3,9 +3,9 @@ package org.klodnicki.util;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 
-public class EmployeeCSVMappingStrategy extends ColumnPositionMappingStrategy<EmployeeDTOResponse> {
+public class EmployeeExportMappingStrategy extends ColumnPositionMappingStrategy<EmployeeDTOResponse> {
 
-    public EmployeeCSVMappingStrategy() {
+    public EmployeeExportMappingStrategy() {
         this.setType(EmployeeDTOResponse.class);
 
         // Map columns including the flattened fields

@@ -47,7 +47,7 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
                 .collect(Collectors.toList());
 
         // Export to CSV using the mapping strategy
-        CSVUtil.exportToCSV(fileName, employeeDTOs, new EmployeeCSVMappingStrategy());
+        CSVUtil.exportToCSV(fileName, employeeDTOs, new EmployeeExportMappingStrategy());
     }
 
     public void importEmployeesFromCSV(MultipartFile file) throws IOException {
