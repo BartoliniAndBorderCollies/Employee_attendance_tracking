@@ -60,16 +60,11 @@ public class EmployeeController {
     @PostMapping("/import")
     public ResponseEntity<String> importEmployeesFromCSV(@RequestParam("import") MultipartFile file) {
         try {
-            int amountBefore = employeeService.checkRecordsAmount();
             employeeService.importEmployeesFromCSV(file);
-            int checkAfter = employeeService.checkRecordsAmount();
-
-            if (amountBefore == checkAfter)
-                return ResponseEntity.ok("Something went wrong! nothing was added to database");
+            return ResponseEntity.ok("New data has been added!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error importing employee data.");
         }
-        return ResponseEntity.ok("New data has been added!");
     }
 
     @PostMapping
