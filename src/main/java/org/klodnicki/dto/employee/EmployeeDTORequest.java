@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
+import org.klodnicki.util.DepartmentConverter;
 import org.klodnicki.util.LocalDateConverter;
 
 import java.time.LocalDate;
@@ -28,7 +29,8 @@ public class EmployeeDTORequest {
     @NotBlank(message = "Email address must be provided!")
     @Email(regexp=".+@.+\\..+", message = "Please enter a valid email address in the format: yourname@example.com")
     private String email;
-    @NotNull(message = "Departament must be chosen!")
+    @CsvCustomBindByName(column = "Department", converter = DepartmentConverter.class)
+    @NotNull(message = "Department must be chosen!")
     private Department department;
     @NotNull(message = "Salary must be given!")
     private double salaryAmount;  // Flattened Salary field
