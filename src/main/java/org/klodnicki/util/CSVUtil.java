@@ -32,6 +32,7 @@ public class CSVUtil {
                     .withType(clazz)
                     .withIgnoreLeadingWhiteSpace(true)
                     .withSeparator(';')
+                    .withSkipLines(1)     // Skip the header line
                     .build();
             return csvToBean.parse();
         }
