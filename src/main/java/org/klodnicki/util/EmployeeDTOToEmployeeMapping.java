@@ -16,9 +16,5 @@ public class EmployeeDTOToEmployeeMapping extends PropertyMap<EmployeeDTORequest
         map(source.getPostalCode(), destination.getAddress().getPostalCode());
         map(source.getCity(), destination.getAddress().getCity());
         map(source.getCountry(), destination.getAddress().getCountry());
-
-        // Directly map LocalDate fields
-        map(source.getBirthDate(), destination.getBirthDate());
-        map(source.getDateOfEmployment(), destination.getDateOfEmployment());
     }
 }
