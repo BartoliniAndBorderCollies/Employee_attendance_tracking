@@ -1,6 +1,5 @@
 package org.klodnicki.dto.employee;
 
-import com.opencsv.bean.CsvCustomBindByName;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,8 +10,6 @@ import lombok.Setter;
 import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.model.Department;
 import org.klodnicki.model.Gender;
-import org.klodnicki.util.DepartmentConverter;
-import org.klodnicki.util.LocalDateConverter;
 
 import java.time.LocalDate;
 
@@ -29,16 +26,19 @@ public class EmployeeDTORequest {
     @NotBlank(message = "Email address must be provided!")
     @Email(regexp=".+@.+\\..+", message = "Please enter a valid email address in the format: yourname@example.com")
     private String email;
-    @CsvCustomBindByName(column = "Department", converter = DepartmentConverter.class)
     @NotNull(message = "Department must be chosen!")
     private Department department;
     @NotNull(message = "Salary must be given!")
     private double salaryAmount;  // Flattened Salary field
     private String birthPlace;
-    @CsvCustomBindByName(column = "birthDate", converter = LocalDateConverter.class)
+
+    // These are the fields I need to manually parse
+    private String rawBirthDate;
+    private String rawDateOfEmployment;
+
     private LocalDate birthDate;
+    private LocalDate dateOfEmployment;
     private Gender gender;
-    // Flattened Address fields
     private String street;
     private String houseNumber;
     private String postalCode;
@@ -47,8 +47,6 @@ public class EmployeeDTORequest {
     private String telephoneNumber;
     private String bankAccountNumber;
     private String peselOrNip;
-    @CsvCustomBindByName(column = "dateOfEmployment", converter = LocalDateConverter.class)
-    private LocalDate dateOfEmployment;
     private BadgeSystemB_DTO badge;
 
 }
