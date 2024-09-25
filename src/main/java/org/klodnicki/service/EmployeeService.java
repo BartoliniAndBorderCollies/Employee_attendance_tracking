@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +59,19 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         // Use InputStream from MultipartFile for CSV import
         List<EmployeeDTORequest> employeeDTOs = CSVUtil.importFromCSV(file.getInputStream(), EmployeeDTORequest.class, strategy);
 
+        // Manually convert any String dates to LocalDate if necessary
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (EmployeeDTORequest dto : employeeDTOs) {
+            if (dto.getBirthDate() == null && dto.getRawBirthDate() != null) {
+                dto.setBirthDate(LocalDate.parse(dto.getRawBirthDate(), dateFormatter));
+            }
+            if (dto.getDateOfEmployment() == null && dto.getRawDateOfEmployment() != null) {
+                dto.setDateOfEmployment(LocalDate.parse(dto.getRawDateOfEmployment(), dateFormatter));
+            }
+        }
+
+        // Map DTOs to Employee entities and save
         List<Employee> employees = employeeDTOs.stream()
                 .map(dto -> modelMapper.map(dto, Employee.class))
                 .collect(Collectors.toList());
