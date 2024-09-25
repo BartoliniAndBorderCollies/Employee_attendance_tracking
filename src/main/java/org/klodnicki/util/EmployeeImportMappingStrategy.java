@@ -9,13 +9,11 @@ public class EmployeeImportMappingStrategy extends ColumnPositionMappingStrategy
         this.setType(EmployeeDTORequest.class);
 
         this.setColumnMapping(
-                "firstName", "lastName", "email",  // From Person class
-                "street", "houseNumber", "postalCode", "city", "country",  // Flattened Address fields
-                "bankAccountNumber", "birthDate", "birthPlace",
-                "dateOfEmployment", "department", "gender", "id", "peselOrNip",
-                "salaryAmount",  // Flattened Salary amount
-                "telephoneNumber"
+                "firstName", "lastName", "email",
+                "street", "houseNumber", "postalCode", "city", "country",
+                "bankAccountNumber", "rawBirthDate", "birthPlace",
+                "rawDateOfEmployment", "department", "gender", "id", "peselOrNip",
+                "salaryAmount", "telephoneNumber"
         );
     }
 }
-
