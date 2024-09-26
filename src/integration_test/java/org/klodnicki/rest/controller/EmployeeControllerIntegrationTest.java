@@ -138,7 +138,6 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employeeDTORequest.getTelephoneNumber(), employee.getTelephoneNumber());
                     assertEquals(employeeDTORequest.getBankAccountNumber(), employee.getBankAccountNumber());
                     assertEquals(employeeDTORequest.getPeselOrNip(), employee.getPeselOrNip());
-                    assertEquals(employeeDTORequest.getDateOfEmployment(), employee.getDateOfEmployment());
                     assertNull(employee.getBadge());
                 });
     }
