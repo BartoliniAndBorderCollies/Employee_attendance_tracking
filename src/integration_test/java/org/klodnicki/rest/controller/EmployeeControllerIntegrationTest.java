@@ -77,10 +77,29 @@ class EmployeeControllerIntegrationTest {
     @Test
     public void create_ShouldAddEmployeeToDatabaseAndReturnEmployeeDTOResponse_WhenEmployeeDTORequestIsGiven() {
 
-        EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("firstName", "lastName",
-                "email@test.pl", Department.DEPARTMENT1, new Salary(100.00), "Warsaw", LocalDate.of(1999, 1, 1),
-                Gender.FEMALE, new Address("street", "house nr", "11-015", "City", "Norway"), "123telephone", "123bankAccount",
-                "StringOrPesel", LocalDate.of(2022, 2, 1), null);
+        EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest(
+                "firstName",
+                "lastName",
+                "email@test.pl",
+                Department.DEPARTMENT1,
+                100.00,  // Flattened salary
+                "Warsaw",
+                "1999-01-01",  // rawBirthDate
+                "2022-02-01",  // rawDateOfEmployment
+                LocalDate.of(1999, 1, 1),  // birthDate
+                LocalDate.of(2022, 2, 1),  // dateOfEmployment
+                Gender.FEMALE,
+                "street",
+                "house nr",
+                "11-015",
+                "City",
+                "Norway",
+                "123telephone",
+                "123bankAccount",
+                "StringOrPesel",
+                null  // Badge is null
+        );
+
 
         webTestClient.post()
                 .uri(URI_MAIN_PATH)
@@ -101,11 +120,21 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
                     assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
                     assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
-                    assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
+                    assertEquals(employeeDTORequest.getSalaryAmount(), employee.getSalary().getAmount(), 0.01); // Compare salary
                     assertEquals(employeeDTORequest.getBirthPlace(), employee.getBirthPlace());
-                    assertEquals(employeeDTORequest.getBirthDate(), employee.getBirthDate());
+
+                    // Parse rawBirthDate and rawDateOfEmployment in the service and check parsed LocalDate
+                    LocalDate parsedBirthDate = LocalDate.parse(employeeDTORequest.getRawBirthDate());
+                    LocalDate parsedDateOfEmployment = LocalDate.parse(employeeDTORequest.getRawDateOfEmployment());
+                    assertEquals(parsedBirthDate, employee.getBirthDate());
+                    assertEquals(parsedDateOfEmployment, employee.getDateOfEmployment());
+
                     assertEquals(employeeDTORequest.getGender(), employee.getGender());
-                    assertEquals(employeeDTORequest.getAddress(), employee.getAddress());
+                    assertEquals(employeeDTORequest.getStreet(), employee.getAddress().getStreet());
+                    assertEquals(employeeDTORequest.getHouseNumber(), employee.getAddress().getHouseNumber());
+                    assertEquals(employeeDTORequest.getPostalCode(), employee.getAddress().getPostalCode());
+                    assertEquals(employeeDTORequest.getCity(), employee.getAddress().getCity());
+                    assertEquals(employeeDTORequest.getCountry(), employee.getAddress().getCountry());
                     assertEquals(employeeDTORequest.getTelephoneNumber(), employee.getTelephoneNumber());
                     assertEquals(employeeDTORequest.getBankAccountNumber(), employee.getBankAccountNumber());
                     assertEquals(employeeDTORequest.getPeselOrNip(), employee.getPeselOrNip());
