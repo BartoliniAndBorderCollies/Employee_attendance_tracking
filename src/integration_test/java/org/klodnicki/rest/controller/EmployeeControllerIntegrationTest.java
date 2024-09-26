@@ -159,10 +159,16 @@ class EmployeeControllerIntegrationTest {
                     assertEquals(employee0.getLastName(), actualResponse.getLastName());
                     assertEquals(employee0.getEmail(), actualResponse.getEmail());
                     assertEquals(employee0.getDepartment(), actualResponse.getDepartment());
-                    assertEquals(employee0.getSalary(), actualResponse.getSalary());
+                    assertEquals(employee0.getSalary().getAmount(), actualResponse.getSalaryAmount());
                     assertEquals(employee0.getBirthPlace(), actualResponse.getBirthPlace());
                     assertEquals(employee0.getGender(), actualResponse.getGender());
-                    assertEquals(employee0.getAddress(), actualResponse.getAddress());
+                    // Address comparison (flattened fields)
+                    assertEquals(employee0.getAddress().getStreet(), actualResponse.getStreet());
+                    assertEquals(employee0.getAddress().getHouseNumber(), actualResponse.getHouseNumber());
+                    assertEquals(employee0.getAddress().getPostalCode(), actualResponse.getPostalCode());
+                    assertEquals(employee0.getAddress().getCity(), actualResponse.getCity());
+                    assertEquals(employee0.getAddress().getCountry(), actualResponse.getCountry());
+
                     assertEquals(employee0.getTelephoneNumber(), actualResponse.getTelephoneNumber());
                     assertEquals(employee0.getBankAccountNumber(), actualResponse.getBankAccountNumber());
                     assertEquals(employee0.getPeselOrNip(), actualResponse.getPeselOrNip());
