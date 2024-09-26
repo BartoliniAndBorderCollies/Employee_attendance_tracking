@@ -179,17 +179,48 @@ class EmployeeControllerIntegrationTest {
 
     @Test
     public void update_ShouldUpdateEmployeeOnDatabase_WhenEmployeeDTORequestAndIdAreGiven() {
-        Employee employeeToBeUpdated = new Employee("firstName", "LastName", "test2@test.pl",
-                Department.DEPARTMENT3, new Salary(1000.00), "Warszawa", LocalDate.of(1900, 1, 1),
-                Gender.FEMALE, new Address(), "11111111111", "bank account number",
-                "NIP 789-111-111-12", LocalDate.of(2024, 7, 19), null);
+        // Create an employee to be updated and save it in the repository
+        Employee employeeToBeUpdated = new Employee(
+                "firstName",
+                "LastName",
+                "test2@test.pl",
+                Department.DEPARTMENT3,
+                new Salary(1000.00),
+                "Warszawa",
+                LocalDate.of(1900, 1, 1),
+                Gender.FEMALE,
+                new Address("Old Street", "10", "11-011", "Old City", "Old Country"),
+                "11111111111",
+                "bank account number",
+                "NIP 789-111-111-12",
+                LocalDate.of(2024, 7, 19),
+                null
+        );
         employeeRepository.save(employeeToBeUpdated);
 
-        EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest("updatedFirstName", "updatedLastName",
-                "updatedEmail@update.pl", Department.DEPARTMENT2, new Salary(50.00), "Updated birth place",
-                LocalDate.of(1983, 9, 12), Gender.FEMALE, new Address("Street", "12",
-                "11-015", "Poznan", "Poland"), "updated phone","updated bank account",
-                "updated pesel", LocalDate.of(1922, 3, 3), null);
+        // Create a new EmployeeDTORequest with updated values
+        EmployeeDTORequest employeeDTORequest = new EmployeeDTORequest(
+                "updatedFirstName",
+                "updatedLastName",
+                "updatedEmail@update.pl",
+                Department.DEPARTMENT2,
+                50.00,  // Updated salary
+                "Updated birth place",
+                "1983-09-12",  // rawBirthDate
+                "2011-11-01",  // rawDateOfEmployment
+                LocalDate.of(1983, 9, 12),  // birthDate
+                LocalDate.of(2011, 11, 1),  // dateOfEmployment
+                Gender.FEMALE,
+                "Street",  // Address details updated
+                "12",
+                "11-015",
+                "Poznan",
+                "Poland",
+                "updated phone",
+                "updated bank account",
+                "updated pesel",
+                null  // Badge remains null
+        );
 
         webTestClient.put()
                 .uri(URI_MAIN_PATH + "/" + employeeToBeUpdated.getId())
@@ -201,27 +232,46 @@ class EmployeeControllerIntegrationTest {
                     EmployeeDTOResponse actualResponse = response.getResponseBody();
                     assertNotNull(actualResponse);
 
+                    // Fetch updated employee from the repository
                     Optional<Employee> optionalEmployee = employeeRepository.findById(employeeToBeUpdated.getId());
                     assertTrue(optionalEmployee.isPresent(), "Employee not found in database");
 
-                    Employee employee = optionalEmployee.get();
-                    assertEquals(employeeDTORequest.getFirstName(), employee.getFirstName());
-                    assertEquals(employeeDTORequest.getLastName(), employee.getLastName());
-                    assertEquals(employeeDTORequest.getEmail(), employee.getEmail());
-                    assertEquals(employeeDTORequest.getDepartment(), employee.getDepartment());
-                    assertEquals(employeeDTORequest.getSalary(), employee.getSalary());
-                    assertEquals(employeeDTORequest.getBirthDate(), employee.getBirthDate());
-                    assertEquals(employeeDTORequest.getBirthPlace(), employee.getBirthPlace());
-                    assertEquals(employeeDTORequest.getGender(), employee.getGender());
-                    assertEquals(employeeDTORequest.getAddress(), employee.getAddress());
-                    assertEquals(employeeDTORequest.getTelephoneNumber(), employee.getTelephoneNumber());
-                    assertEquals(employeeDTORequest.getBankAccountNumber(), employee.getBankAccountNumber());
-                    assertEquals(employeeDTORequest.getPeselOrNip(), employee.getPeselOrNip());
-                    assertEquals(employeeDTORequest.getDateOfEmployment(), employee.getDateOfEmployment());
-                    assertNull(employeeDTORequest.getBadge());
+                    Employee updatedEmployee = optionalEmployee.get();
 
+                    // Assert that all fields were updated correctly
+                    assertEquals(employeeDTORequest.getFirstName(), updatedEmployee.getFirstName());
+                    assertEquals(employeeDTORequest.getLastName(), updatedEmployee.getLastName());
+                    assertEquals(employeeDTORequest.getEmail(), updatedEmployee.getEmail());
+                    assertEquals(employeeDTORequest.getDepartment(), updatedEmployee.getDepartment());
+
+                    // Salary comparison with double precision tolerance
+                    assertEquals(employeeDTORequest.getSalaryAmount(), updatedEmployee.getSalary().getAmount(), 0.01);
+
+                    // Date of birth and date of employment comparisons
+                    assertEquals(employeeDTORequest.getBirthDate(), updatedEmployee.getBirthDate());
+                    assertEquals(employeeDTORequest.getDateOfEmployment(), updatedEmployee.getDateOfEmployment());
+
+                    // Birthplace and gender
+                    assertEquals(employeeDTORequest.getBirthPlace(), updatedEmployee.getBirthPlace());
+                    assertEquals(employeeDTORequest.getGender(), updatedEmployee.getGender());
+
+                    // Address comparison (flattened fields)
+                    assertEquals(employeeDTORequest.getStreet(), updatedEmployee.getAddress().getStreet());
+                    assertEquals(employeeDTORequest.getHouseNumber(), updatedEmployee.getAddress().getHouseNumber());
+                    assertEquals(employeeDTORequest.getPostalCode(), updatedEmployee.getAddress().getPostalCode());
+                    assertEquals(employeeDTORequest.getCity(), updatedEmployee.getAddress().getCity());
+                    assertEquals(employeeDTORequest.getCountry(), updatedEmployee.getAddress().getCountry());
+
+                    // Contact information
+                    assertEquals(employeeDTORequest.getTelephoneNumber(), updatedEmployee.getTelephoneNumber());
+                    assertEquals(employeeDTORequest.getBankAccountNumber(), updatedEmployee.getBankAccountNumber());
+                    assertEquals(employeeDTORequest.getPeselOrNip(), updatedEmployee.getPeselOrNip());
+
+                    // Badge should still be null
+                    assertNull(updatedEmployee.getBadge());
                 });
     }
+
 
     @Test
     public void deleteById_ShouldDeleteEmployee_WhenIdIsGiven() {
