@@ -2,11 +2,14 @@ package org.klodnicki.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.klodnicki.dto.badge.BadgeSystemB_DTO;
 import org.klodnicki.dto.employee.EmployeeDTORequest;
 import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
+import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
+import org.klodnicki.model.Gender;
 import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
@@ -16,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +50,30 @@ class EmployeeServiceTest {
 
     @BeforeEach
     public void setUp() {
-        employeeDTORequest = new EmployeeDTORequest("firstName", "lastName", "email@email.com", Department.DEPARTMENT1,
-                new Salary(100.00));
+        employeeDTORequest = new EmployeeDTORequest(
+                "firstName",
+                "lastName",
+                "email@email.com",
+                Department.DEPARTMENT1,
+                100.00,  // Flattened salaryAmount
+                "Warsaw",  // Birth place
+                "1957-12-10",  // rawBirthDate (String format)
+                "1998-10-11",  // rawDateOfEmployment (String format)
+                LocalDate.of(1957, 12, 10),  // birthDate
+                LocalDate.of(1998, 10, 11),  // dateOfEmployment
+                Gender.FEMALE,
+                "Street name",  // Street (Address flattened fields)
+                "12A",  // House number
+                "11-011",  // Postal code
+                "Poznan",  // City
+                "Poland",  // Country
+                "telephone 123443",
+                "bank account 321",
+                "nip123321",
+                new BadgeSystemB_DTO()  // Badge
+        );
     }
+
 
     @Test
     public void create_ShouldMapSaveAndMapAgain_WhenEmployeeDTORequestIsGiven() {
@@ -134,6 +159,8 @@ class EmployeeServiceTest {
     public void update_ShouldGetValuesIfPresentAndSetAndMapAndSave_WhenIdAndEmployeeDTORequestAreGiven() throws NotFoundInDatabaseException {
         //Arrange
         when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
+        when(employee.getSalary()).thenReturn(new Salary());
+        when(employee.getAddress()).thenReturn(new Address());
         when(employeeRepository.save(employee)).thenReturn(employee);
         when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
 
