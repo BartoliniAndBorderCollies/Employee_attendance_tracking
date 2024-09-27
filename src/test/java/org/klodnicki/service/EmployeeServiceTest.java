@@ -159,6 +159,8 @@ class EmployeeServiceTest {
     public void update_ShouldGetValuesIfPresentAndSetAndMapAndSave_WhenIdAndEmployeeDTORequestAreGiven() throws NotFoundInDatabaseException {
         //Arrange
         when(employeeRepository.findById(existingId)).thenReturn(Optional.of(employee));
+        when(employee.getSalary()).thenReturn(new Salary());
+        when(employee.getAddress()).thenReturn(new Address());
         when(employeeRepository.save(employee)).thenReturn(employee);
         when(modelMapper.map(employee, EmployeeDTOResponse.class)).thenReturn(employeeDTOResponse);
 
