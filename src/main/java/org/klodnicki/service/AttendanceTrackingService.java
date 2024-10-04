@@ -33,6 +33,8 @@ public class AttendanceTrackingService {
         badge.setBadgeNumber(badgeSystemADto.getBadgeNumber());
         badge.setLocation(badgeSystemADto.getLocation());
         badge.setDeviceName(badgeSystemADto.getDeviceName());
+        badge.setTimeStamp(LocalDateTime.now());
+        badge.setAction(Action.CLOCK_IN);
 
         EmployeeDTOResponse employeeDTOResponse = employeeService.findById(employeeId);
         Employee mappedEmployee = modelMapper.map(employeeDTOResponse, Employee.class);
