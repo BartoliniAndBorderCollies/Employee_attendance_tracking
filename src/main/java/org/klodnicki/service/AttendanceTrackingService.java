@@ -79,6 +79,8 @@ public class AttendanceTrackingService {
         badgeScanHistory.setBadge(badge);
         badgeScanHistory.setLocation(badgeSystemADto.getLocation());
         badgeScanHistory.setDeviceName(badgeSystemADto.getDeviceName());
+        badgeScanHistory.setTimeStamp(LocalDateTime.now());
+        badgeScanHistory.setAction(determineAction(badge));
 
         Employee employee = badge.getEmployee();
         badgeScanHistory.setEmployee(employee);
