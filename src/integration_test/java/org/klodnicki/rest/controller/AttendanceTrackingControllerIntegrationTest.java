@@ -188,6 +188,8 @@ class AttendanceTrackingControllerIntegrationTest {
                     assertEquals(existingBadgeScanHistory.getBadge(), badge);
                     assertEquals(existingBadgeScanHistory.getLocation(), badgeSystemADto.getLocation());
                     assertEquals(existingBadgeScanHistory.getDeviceName(), badgeSystemADto.getDeviceName());
+                    assertEquals(existingBadgeScanHistory.getAction(), badgeSystemADto.getAction());
+                    assertNotNull(existingBadgeScanHistory.getTimeStamp());
                     assertEquals(existingBadgeScanHistory.getEmployee(), badge.getEmployee());
                 });
     }
