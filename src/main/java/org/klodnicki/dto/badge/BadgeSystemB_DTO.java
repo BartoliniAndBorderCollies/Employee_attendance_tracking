@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.klodnicki.dto.employee.EmployeeDTOResponse;
 import org.klodnicki.model.Action;
 
 import java.time.LocalDateTime;
@@ -20,5 +19,4 @@ public class BadgeSystemB_DTO {
     private String deviceName;
     private Action action;
     private LocalDateTime timeStamp;
-    private EmployeeDTOResponse employee;
 }
