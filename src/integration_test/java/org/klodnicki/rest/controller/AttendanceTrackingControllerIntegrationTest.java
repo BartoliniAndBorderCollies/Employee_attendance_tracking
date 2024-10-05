@@ -63,17 +63,17 @@ class AttendanceTrackingControllerIntegrationTest {
         badgeRepository.save(badge);
 
         badgeSystemADto = new BadgeSystemA_DTO("12345", "Location A", "Device A",
-                Action.CLOCK_OUT, null, null);
+                Action.CLOCK_OUT, null);
 
         badgeSystemBDto = new BadgeSystemB_DTO("12345", "Location B", "Device B",
-                Action.CLOCK_OUT, exactTime, null);
+                Action.CLOCK_OUT, exactTime);
 
         //to avoid duplicate entry
         badgeSystemAADto = new BadgeSystemA_DTO("98765", "Location A", "Device A",
-                null, null,null);
+                null, null);
 
         badgeSystemBBDto = new BadgeSystemB_DTO("98765", "Location B", "Device B",
-                Action.CLOCK_OUT, exactTime, null);
+                Action.CLOCK_OUT, exactTime);
     }
 
     @AfterEach
