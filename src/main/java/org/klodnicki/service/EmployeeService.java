@@ -10,7 +10,6 @@ import org.klodnicki.dto.ResponseDTO;
 import org.klodnicki.exception.NotFoundInDatabaseException;
 import org.klodnicki.model.Address;
 import org.klodnicki.model.Department;
-import org.klodnicki.model.Salary;
 import org.klodnicki.model.entity.Employee;
 import org.klodnicki.repository.EmployeeRepository;
 import org.klodnicki.service.generic.BasicCrudOperations;
@@ -118,7 +117,7 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
     /**
      * Updates an existing employee's information.
      *
-     * @param id The ID of the employee to update.
+     * @param id                 The ID of the employee to update.
      * @param employeeDTORequest The DTO containing the updated employee details.
      * @return The updated EmployeeDTOResponse object.
      * @throws NotFoundInDatabaseException if the employee with the given ID is not found.
@@ -142,24 +141,24 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
         Optional.ofNullable(employeeDTORequest.getDateOfEmployment()).ifPresent(employeeToBeUpdated::setDateOfEmployment);
 
         // Update Salary (embedded class)
-        Optional.of(employeeDTORequest.getSalaryAmount()).ifPresent(salaryAmount -> {
-            if (employeeToBeUpdated.getSalary() == null) {
-                employeeToBeUpdated.setSalary(new Salary());
-            }
-            employeeToBeUpdated.getSalary().setAmount(salaryAmount);
-        });
+        Optional.ofNullable(employeeDTORequest.getSalaryAmount()).ifPresent(salaryAmount ->
+                employeeToBeUpdated.getSalary().setAmount(salaryAmount));
 
-        // Update Address (embedded class)
-        Optional.ofNullable(employeeDTORequest.getStreet()).ifPresent(street -> {
+        // Check if any address fields are present before updating the Address
+        if (employeeDTORequest.getStreet() != null || employeeDTORequest.getHouseNumber() != null ||
+                employeeDTORequest.getPostalCode() != null || employeeDTORequest.getCity() != null ||
+                employeeDTORequest.getCountry() != null) {
+
             if (employeeToBeUpdated.getAddress() == null) {
                 employeeToBeUpdated.setAddress(new Address());
             }
-            employeeToBeUpdated.getAddress().setStreet(street);
+
+            Optional.ofNullable(employeeDTORequest.getStreet()).ifPresent(employeeToBeUpdated.getAddress()::setStreet);
             Optional.ofNullable(employeeDTORequest.getHouseNumber()).ifPresent(employeeToBeUpdated.getAddress()::setHouseNumber);
             Optional.ofNullable(employeeDTORequest.getPostalCode()).ifPresent(employeeToBeUpdated.getAddress()::setPostalCode);
             Optional.ofNullable(employeeDTORequest.getCity()).ifPresent(employeeToBeUpdated.getAddress()::setCity);
             Optional.ofNullable(employeeDTORequest.getCountry()).ifPresent(employeeToBeUpdated.getAddress()::setCountry);
-        });
+        }
 
         employeeRepository.save(employeeToBeUpdated);
 
@@ -207,6 +206,5 @@ public class EmployeeService implements BasicCrudOperations<EmployeeDTOResponse,
 
         return employeeDTOResponseList;
     }
-
 
 }
