@@ -28,8 +28,7 @@ public class EmployeeDTORequest {
     private String email;
     @NotNull(message = "Department must be chosen!")
     private Department department;
-    @NotNull(message = "Salary must be given!")
-    private double salaryAmount;  // Flattened Salary field
+    private Double salaryAmount;  // Flattened Salary field
     private String birthPlace;
 
     // These are the fields I need to manually parse

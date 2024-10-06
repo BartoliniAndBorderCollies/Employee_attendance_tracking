@@ -33,6 +33,8 @@ public class AttendanceTrackingService {
         badge.setBadgeNumber(badgeSystemADto.getBadgeNumber());
         badge.setLocation(badgeSystemADto.getLocation());
         badge.setDeviceName(badgeSystemADto.getDeviceName());
+        badge.setTimeStamp(LocalDateTime.now());
+        badge.setAction(Action.CLOCK_IN);
 
         EmployeeDTOResponse employeeDTOResponse = employeeService.findById(employeeId);
         Employee mappedEmployee = modelMapper.map(employeeDTOResponse, Employee.class);
@@ -79,6 +81,8 @@ public class AttendanceTrackingService {
         badgeScanHistory.setBadge(badge);
         badgeScanHistory.setLocation(badgeSystemADto.getLocation());
         badgeScanHistory.setDeviceName(badgeSystemADto.getDeviceName());
+        badgeScanHistory.setTimeStamp(LocalDateTime.now());
+        badgeScanHistory.setAction(determineAction(badge));
 
         Employee employee = badge.getEmployee();
         badgeScanHistory.setEmployee(employee);
@@ -96,8 +100,8 @@ public class AttendanceTrackingService {
         badgeScanHistory.setBadge(badge);
         badgeScanHistory.setLocation(badgeSystemBDto.getLocation());
         badgeScanHistory.setDeviceName(badgeSystemBDto.getDeviceName());
-        badgeScanHistory.setAction(determineAction(badge));
-        badgeScanHistory.setTimeStamp(LocalDateTime.now());
+        badgeScanHistory.setAction(badgeSystemBDto.getAction());
+        badgeScanHistory.setTimeStamp(badgeSystemBDto.getTimeStamp());
         Employee employee = badge.getEmployee();
         badgeScanHistory.setEmployee(employee);
 
