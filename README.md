@@ -1,5 +1,7 @@
 # EMS – junior developer interview exercise
 
+This is a task from my mentor to simulate real excersise and improve my skills in coding and cooperation.
+
 ## Task II overview
 The goal is to adapt the existing system by expanding old and introducing new
 functionalities.
