@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v1/employees")
@@ -33,7 +34,7 @@ public class EmployeeController {
     private static final String EMPLOYEES_CSV = "employees.csv";
 
     @GetMapping("/export")
-    public ResponseEntity<Resource> exportEmployeesToCSV() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+    public ResponseEntity<?> exportEmployeesToCSV() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
 
         // Export employees to CSV
         employeeService.exportEmployeesToCSV(EMPLOYEES_CSV);
@@ -43,7 +44,7 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
 
-        // Create resource for download
+        // Create InputStreamResource without closing it prematurely
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
         ResponseEntity<Resource> response = ResponseEntity.ok()
@@ -51,8 +52,18 @@ public class EmployeeController {
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(resource);
 
-        // Delete the file after sending the response
-        file.delete();
+        // Delete the file asynchronously after a short delay, without closing the stream early
+        CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(1000); // Delay 1 second
+                boolean isDeleted = file.delete();
+                if (!isDeleted) {
+                    System.err.println("Failed to delete file: " + file.getPath());
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
 
         return response;
     }

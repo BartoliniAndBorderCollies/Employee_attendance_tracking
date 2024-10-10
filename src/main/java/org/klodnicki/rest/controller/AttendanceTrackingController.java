@@ -17,49 +17,38 @@ public class AttendanceTrackingController {
 
     // Endpoint for scanning badge in system A
     @PutMapping("/systemA/scan/{badgeNumber}")
-    public ResponseEntity<String> scanBadgeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable String badgeNumber) {
+    public ResponseEntity<String> scanBadgeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable String badgeNumber)
+            throws NotFoundInDatabaseException {
 
-        try {
-            attendanceTrackingService.scanBadgeSystemA(badgeSystemADto, badgeNumber);
-            return ResponseEntity.ok("Badge scanned successfully for System A");
-        } catch (NotFoundInDatabaseException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        attendanceTrackingService.scanBadgeSystemA(badgeSystemADto, badgeNumber);
+        return ResponseEntity.ok("Badge scanned successfully for System A");
     }
 
     // Endpoint for scanning badge in system B
     @PutMapping("/systemB/scan/{badgeNumber}")
-    public ResponseEntity<String> scanBadgeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto, @PathVariable String badgeNumber) {
+    public ResponseEntity<String> scanBadgeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto, @PathVariable String badgeNumber)
+            throws NotFoundInDatabaseException {
 
-        try {
-            attendanceTrackingService.scanBadgeSystemB(badgeSystemBDto, badgeNumber);
-            return ResponseEntity.ok("Badge scanned successfully for System B");
-        } catch (NotFoundInDatabaseException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        attendanceTrackingService.scanBadgeSystemB(badgeSystemBDto, badgeNumber);
+        return ResponseEntity.ok("Badge scanned successfully for System B");
     }
 
     // Endpoint for assigning badge to Employee in system A
     @PostMapping("/systemA/assign/{employeeId}")
-    public ResponseEntity<String> assignBadgeToEmployeeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable Long employeeId) {
-        try {
-            attendanceTrackingService.assignBadgeToEmployeeSystemA(badgeSystemADto, employeeId);
-            return ResponseEntity.ok("Badge assigned successfully for System A");
-        } catch (NotFoundInDatabaseException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+    public ResponseEntity<String> assignBadgeToEmployeeSystemA(@RequestBody BadgeSystemA_DTO badgeSystemADto, @PathVariable Long employeeId)
+            throws NotFoundInDatabaseException {
+
+        attendanceTrackingService.assignBadgeToEmployeeSystemA(badgeSystemADto, employeeId);
+        return ResponseEntity.ok("Badge assigned successfully for System A");
     }
 
     //Endpoint for assigning badge to Employee in system B
     @PostMapping("/systemB/assign/{employeeId}")
-    public ResponseEntity<String> assignBadgeToEmployeeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto, @PathVariable Long employeeId) {
+    public ResponseEntity<String> assignBadgeToEmployeeSystemB(@RequestBody BadgeSystemB_DTO badgeSystemBDto, @PathVariable Long employeeId)
+            throws NotFoundInDatabaseException {
 
-        try {
-            attendanceTrackingService.assignBadgeToEmployeeSystemB(badgeSystemBDto, employeeId);
-            return ResponseEntity.ok("Badge assigned successfully for System B");
-        } catch (NotFoundInDatabaseException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        attendanceTrackingService.assignBadgeToEmployeeSystemB(badgeSystemBDto, employeeId);
+        return ResponseEntity.ok("Badge assigned successfully for System B");
     }
 
 }

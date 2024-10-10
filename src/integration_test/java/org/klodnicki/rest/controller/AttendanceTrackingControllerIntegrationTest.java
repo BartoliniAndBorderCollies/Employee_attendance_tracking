@@ -62,15 +62,13 @@ class AttendanceTrackingControllerIntegrationTest {
         badge.setEmployee(employee);
         badgeRepository.save(badge);
 
-        badgeSystemADto = new BadgeSystemA_DTO("12345", "Location A", "Device A",
-                Action.CLOCK_OUT, null);
+        badgeSystemADto = new BadgeSystemA_DTO("12345", "Location A", "Device A");
 
         badgeSystemBDto = new BadgeSystemB_DTO("12345", "Location B", "Device B",
                 Action.CLOCK_OUT, exactTime);
 
         //to avoid duplicate entry
-        badgeSystemAADto = new BadgeSystemA_DTO("98765", "Location A", "Device A",
-                null, null);
+        badgeSystemAADto = new BadgeSystemA_DTO("98765", "Location A", "Device A");
 
         badgeSystemBBDto = new BadgeSystemB_DTO("98765", "Location B", "Device B",
                 Action.CLOCK_OUT, exactTime);
@@ -188,7 +186,7 @@ class AttendanceTrackingControllerIntegrationTest {
                     assertEquals(existingBadgeScanHistory.getBadge(), badge);
                     assertEquals(existingBadgeScanHistory.getLocation(), badgeSystemADto.getLocation());
                     assertEquals(existingBadgeScanHistory.getDeviceName(), badgeSystemADto.getDeviceName());
-                    assertEquals(existingBadgeScanHistory.getAction(), badgeSystemADto.getAction());
+                    assertEquals(existingBadgeScanHistory.getAction(), Action.CLOCK_OUT);
                     assertNotNull(existingBadgeScanHistory.getTimeStamp());
                     assertEquals(existingBadgeScanHistory.getEmployee(), badge.getEmployee());
                 });
