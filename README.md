@@ -1,4 +1,4 @@
-# EMS – junior developer interview exercise
+# Employee attendance tracking
 
 This is a task from my mentor to simulate real excersise and improve my skills in coding and cooperation.
 
